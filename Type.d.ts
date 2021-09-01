@@ -8,3 +8,10 @@ interface IUserData {
 interface IRoutes {
   users: { router: express.Router };
 }
+
+interface IPayload {
+  id: string;
+  email: string;
+  iat: number;
+  exp: number;
+}
