@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import models from '../models/models';
 import jwt, { Secret, SignOptions } from 'jsonwebtoken';
+import md5 from 'md5';
 
 type TokenData = {
   id: string;
@@ -21,6 +22,10 @@ class UserService {
     return token;
   }
 
+  private hashPassword(password: string) {
+    return md5(password);
+  }
+
   public async getAllUsers() {
     const result = await this.userModel.getAllUsers();
     return result;
@@ -36,7 +41,8 @@ class UserService {
 
   public async registerUser(userData: IUserData) {
     const { email, name, birthdate, password } = userData;
-    const newUserData = { email, name, birthdate, password };
+    const hashedPassword = this.hashPassword(password);
+    const newUserData = { email, name, birthdate, password: hashedPassword };
     const { insertedId } = await this.userModel.registerUser(newUserData);
     const userId = insertedId.toString();
     const newUser = await this.userModel.getUserById(userId);
@@ -45,7 +51,9 @@ class UserService {
   }
 
   public async updateUser(id: string, newUserData: IUserData) {
-    await this.userModel.updateUser(id, newUserData);
+    const { password, ...otherInfos } = newUserData;
+    const readyUserData = { ...otherInfos, password: this.hashPassword(password) }
+    await this.userModel.updateUser(id, readyUserData);
     const updatedUser = await this.userModel.getUserById(id);
     return updatedUser;
   }
@@ -56,7 +64,8 @@ class UserService {
   }
 
   public async login(email: string, password: string) {
-    const result = await this.userModel.getUserByEmailAndPassword(email, password);
+    const hashedPassword = this.hashPassword(password);
+    const result = await this.userModel.getUserByEmailAndPassword(email, hashedPassword);
     if (!result) {
       return ({ error: { message: 'Email or password incorrect' } });
     };
