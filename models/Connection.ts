@@ -20,7 +20,7 @@ export default class Connection {
   }
 
   public connection() {
-    return MongoClient.connect(this.mongoDbUrl, this.options)
+    return MongoClient.connect(this.mongoDbUrl)
       .then((conn) => conn.db(MONGO_DB))
       .catch((err) => {
         console.error(err);
