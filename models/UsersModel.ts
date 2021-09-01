@@ -6,6 +6,11 @@ class UsersModel extends Connection {
     super();
   }
 
+  public getUserByEmail(email: string) {
+    return this.connection()
+      .then((db) => db.collection('users').findOne({ email }));
+  }
+
   public async getAllUsers() {
     return this.connection()
       .then((db) => db.collection('users').find().toArray());
@@ -32,6 +37,11 @@ class UsersModel extends Connection {
   public async deleteUser(id: string) {
     return this.connection()
       .then((db) => db.collection('users').deleteOne({ _id: new ObjectId(id) }));
+  }
+
+  public async getUserByEmailAndPassword(email: string, password: string) {
+    return this.connection()
+      .then((db) => db.collection('users').findOne({ email, password }));
   }
   
 }
