@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import errorHandler from '../utils/ErrorHandler';
+import { GenericErrorHandler } from '../errors';
 
 export default (
-  err: errorHandler,
+  err: GenericErrorHandler,
   _req: Request,
   res: Response,
   _next: NextFunction

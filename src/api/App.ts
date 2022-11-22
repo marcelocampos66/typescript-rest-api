@@ -1,18 +1,15 @@
-import 'dotenv/config';
-import express from 'express';
+import express, { Express } from 'express';
 import bodyParser from 'body-parser';
-import errorMiddleware from '../middlewares/errorMiddleware';
-
-type port = string | undefined;
+import setupRoutes from '../routes/routes';
+import errorMiddleware from '../common/middlewares/error-middleware';
 
 class App {
-  public app: express.Application;
-  public port: port;
+  public app: Express;
+  public port: number;
   private routes: IRoutes;
 
-  constructor(port: port, routes: IRoutes) {
+  constructor(port: number) {
     this.app = express();
-    this.routes = routes;
     this.port = port;
     this.initialMiddlewares();
     this.callRoutes();
@@ -25,7 +22,7 @@ class App {
   }
 
   private callRoutes() {
-    this.app.use('/users', this.routes.users.router);
+    setupRoutes(this.app);
   }
 
   private handleErrors() {

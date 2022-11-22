@@ -13,28 +13,6 @@ class Middlewares {
     this.payload = { id: '' , email: '', iat: 0, exp: 0 };
   }
 
-  private verifyUserDataJoi = (userData: IUserData) => (
-    joi.object({
-      email: joi.string().email().required(),
-      name: joi.string().min(3).required(),
-      birthdate: joi.date().raw().required(),
-      password: joi.string().min(6).required(),
-    }).validate(userData)
-  );
-
-  public verifyUserData = (
-    req: Request,
-    _res: Response,
-    next: NextFunction,
-  ) => {
-    const { body } = req;
-    const { error } = this.verifyUserDataJoi(body);
-    if (error) {
-      return next({ status: 422, message: error.details[0].message });
-    }
-    return next();
-  };
-
   public verifyUserExists = async (
     req: Request,
     _res: Response,
