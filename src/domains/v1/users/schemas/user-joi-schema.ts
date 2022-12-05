@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-export const userRegister = joi.object({
+export const joiUserRegister = joi.object({
   body: joi.object({
     name: joi.string().min(3).required(),
     email: joi.string().email().required(),
@@ -9,7 +9,7 @@ export const userRegister = joi.object({
   })
 });
 
-export const getUserById = joi.object({
+export const joiGetUserById = joi.object({
   params: joi.object({
     userId: joi.string().length(24).required(),
   })

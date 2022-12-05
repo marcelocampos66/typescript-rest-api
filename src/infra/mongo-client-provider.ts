@@ -1,21 +1,13 @@
-import { MongoClient, Collection } from 'mongodb';
+import { connect, disconnect } from 'mongoose';
+import { MONGO_DB_HOST, MONGO_DB } from '../api/config/envs';
 
 class MongoClientProvider {
-  public client: MongoClient;
-  public uri: string;
-
-  async connect(uri: string): Promise<void> {
-    this.uri = uri;
-    this.client = await MongoClient.connect(uri);
+  async connect() {
+    await connect(`mongodb://${MONGO_DB_HOST}`, { dbName: MONGO_DB });
   }
 
-  async disconnect(): Promise<void> {
-    await this.client.close();
-    this.client = null;
-  }
-
-  getCollection (name: string): Collection {
-    return this.client.db().collection(name);
+  async disconnect() {
+    await disconnect();
   }
 }
 

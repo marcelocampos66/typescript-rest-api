@@ -12,10 +12,6 @@ export enum HttpStatusCode {
   SERVICE_UNAVAILABLE = 503
 }
 
-export enum Collections {
-  USERS = 'users',
-}
-
 export enum AuthErrorMessages {
   invalidCredentials = 'Email or password invalid',
 }

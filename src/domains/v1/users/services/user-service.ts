@@ -27,8 +27,8 @@ export class UserService {
     }
     const hashedPassword = await hash(password);
     const newUserData = { email, name, birthdate, password: hashedPassword };
-    const { insertedId } = await this.userRepository.registerUser(newUserData);
-    const userId = insertedId.toString();
+    const insertedUser = await this.userRepository.registerUser(newUserData);
+    const userId = insertedUser._id.toString();
 
     return { userId };
   }
@@ -37,13 +37,13 @@ export class UserService {
     return this.userRepository.getUserById(userId);
   }
 
-  public async updateUser(id: string, newUserData: userDTO) {
+  public async updateUser(userId: string, newUserData: userDTO) {
     const { password, email, ...otherInfos } = newUserData;
 
     const hashedPassword = await hash(password);
     const updateUserData = { ...otherInfos, password: hashedPassword };
 
-    await this.userRepository.updateUser(id, updateUserData);
+    await this.userRepository.updateUser(userId, updateUserData);
   }
 
   public async deleteUser(userId: string) {

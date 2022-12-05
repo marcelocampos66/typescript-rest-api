@@ -2,46 +2,34 @@ import MongoClientProvider from '../../../../infra/mongo-client-provider';
 import { injectable } from 'tsyringe';
 import { ObjectId } from 'mongodb';
 import { userDTO, userUpdateDTO } from '../DTOs';
-import { Collections } from '../../../../common/helpers/enum-helper';
+import { User } from '../models';
 
 @injectable()
 export class UserRepository {
   public getUserByEmail(email: string) {
-    const usersCollection = MongoClientProvider.getCollection(Collections.USERS);
-    
-    return usersCollection.findOne({ email });
+    return User.findOne({ email });
   }
 
   public async registerUser(userData: userDTO) {
-    const usersCollection = MongoClientProvider.getCollection(Collections.USERS);
-
-    return usersCollection.insertOne(userData);
+    return User.create(userData);
   }
 
   public async getAllUsers() {
-    const usersCollection = MongoClientProvider.getCollection(Collections.USERS);
-
-    return usersCollection.find().toArray();
+    return User.find();
   }
 
   public async getUserById(userId: string) {
-    const usersCollection = MongoClientProvider.getCollection(Collections.USERS);
-
-    return usersCollection.findOne({ _id: new ObjectId(userId) });
+    return User.findById(new ObjectId(userId));
   }
 
-  public async updateUser(id: string, newUserData: userUpdateDTO) {
-    const usersCollection = MongoClientProvider.getCollection(Collections.USERS);
-    
-    return usersCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: newUserData },
+  public async updateUser(userId: string, newUserData: userUpdateDTO) {
+    return User.updateOne(
+      { _id: new ObjectId(userId) },
+      newUserData,
     );
   }
 
   public async deleteUser(userId: string) {
-    const usersCollection = MongoClientProvider.getCollection(Collections.USERS);
-
-    return usersCollection.deleteOne({ _id: new ObjectId(userId) });
+    return User.deleteOne({ _id: new ObjectId(userId) });
   }
 }
