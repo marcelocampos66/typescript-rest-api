@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import '../common/container';
 import App from './App';
-import MongoHelper from '../common/helpers/MongoHelper';
+import MongoHelper from '../infra/mongo-client-provider';
 
 const { PORT, MONGO_DB_HOST, MONGO_DB } = process.env;
 

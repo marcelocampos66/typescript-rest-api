@@ -1,6 +1,6 @@
 import { MongoClient, Collection } from 'mongodb';
 
-class MongoHelper {
+class MongoClientProvider {
   public client: MongoClient;
   public uri: string;
 
@@ -19,4 +19,4 @@ class MongoHelper {
   }
 }
 
-export default new MongoHelper();
+export default new MongoClientProvider();

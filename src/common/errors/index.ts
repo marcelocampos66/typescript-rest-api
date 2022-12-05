@@ -1,1 +1,1 @@
-export * from './GenericErrorHandler';
+export * from './generic-error-handler';

@@ -4,3 +4,10 @@ export type userDTO = {
   birthdate: string;
   password: string;
 }
+
+export type userUpdateDTO = {
+  name?: string;
+  birthdate?: string;
+  password?: string;
+}
+

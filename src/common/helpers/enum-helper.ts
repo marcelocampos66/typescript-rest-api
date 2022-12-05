@@ -15,3 +15,12 @@ export enum HttpStatusCode {
 export enum Collections {
   USERS = 'users',
 }
+
+export enum AuthErrorMessages {
+  invalidCredentials = 'Email or password invalid',
+}
+
+export enum UsersErrorMessages {
+  emailAlreadyRegistered = 'This email is already registered',
+  notFound = 'User not found',
+}

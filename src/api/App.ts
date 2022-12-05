@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import setupRoutes from '../routes/routes';
 import errorMiddleware from '../common/middlewares/error-middleware';
@@ -6,7 +6,6 @@ import errorMiddleware from '../common/middlewares/error-middleware';
 class App {
   public app: Express;
   public port: number;
-  private routes: IRoutes;
 
   constructor(port: number) {
     this.app = express();
@@ -22,6 +21,9 @@ class App {
   }
 
   private callRoutes() {
+    this.app.get('/', (_req: Request, res: Response) => {
+      return res.status(200).json({ message: 'Server online!' });
+    })
     setupRoutes(this.app);
   }
 

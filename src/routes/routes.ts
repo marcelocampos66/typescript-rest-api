@@ -11,7 +11,7 @@ const deepReadDir = async (dirPath: string) => await Promise.all(
 
 export default async (app: Express): Promise<void> => {
   const router = Router();
-  app.use('/users-api', router);
+  app.use('/rest-api', router);
   (await deepReadDir(join(__dirname, '../domains'))).flat(Number.POSITIVE_INFINITY).map(async (file: string) => {
     if (file.includes('routes')) {
       (await import(file)).default(router);

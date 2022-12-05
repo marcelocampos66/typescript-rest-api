@@ -1,89 +1,107 @@
-import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
+import { Controller } from '../../../../common/base';
 import { UserService } from '../services';
+import { HttpStatusCode, UsersErrorMessages } from '../../../../common/helpers/enum-helper';
 
 @injectable()
-export class UserController {
+export class UserController extends Controller {
   private readonly userService: UserService;
 
   constructor(
     @inject('UserService') userService: UserService,
   ) {
+    super();
     this.userService = userService;
+    this.registerUser = this.registerUser.bind(this);
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.getUserById = this.getUserById.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
   }
 
-  public async healthCheck(
-    _req: Request,
-    res: Response,
-    _next: NextFunction
-  ) {
-    return res.status(200).json({ message: 'Server online!' });
+  public async registerUser(request: UserController.CreateUserRequest) {
+    try {
+      const { name, email, birthdate, password }  = request;
+      const user = await this.userService.registerUser({ name, email, birthdate, password });
+      if (!user) {
+        return this.response(HttpStatusCode.CONFLICT, { error: UsersErrorMessages.emailAlreadyRegistered })
+      }
+      const { userId } = user;
+
+      return this.response(HttpStatusCode.CREATED, { userId });
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
-  // public async getAllUsers(
-  //   _req: Request,
-  //   res: Response,
-  //   _next: NextFunction
-  // ) {
-  //   const result = await this.userService.getAllUsers();
-  //   return res.status(200).json(result);
-  // }
+  public async getAllUsers(_request: unknown) {
+    try {
+      const users = await this.userService.getAllUsers();
+    
+      return  this.response(HttpStatusCode.OK, users);
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
  
-  // public async getUserById(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ) {
-  //   const { params: { id } } = req;
-  //   const result = await this.userService.getUserById(id);
-  //   if (result.error) {
-  //     return next({ status: 404, message: result.error.message });
-  //   }
-  //   return res.status(200).json(result);
-  // }
+  public async getUserById(request: UserController.GetUserByIdRequest) {
+    try {
+      const { userId } = request;
+      const user = await this.userService.getUserById(userId);
+      if (!user) {
+        return this.response(HttpStatusCode.NOT_FOUND, { error: UsersErrorMessages.notFound })
+      }
+      
+      return this.response(HttpStatusCode.OK, user);
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
   
-  public registerUser = async (
-    req: Request,
-    res: Response,
-    _next: NextFunction
-  ) => {
-    const { body: { name, email, birthdate, password } } = req;
-    const result = await this.userService.registerUser({ name, email, birthdate, password });
+  public async updateUser(request: UserController.UpdateUserRequest) {
+    try {
+      const { payload, name, email, birthdate, password } = request;
+      await this.userService.updateUser(payload.id, { name, email, birthdate, password });
 
-    return res.status(201).json({ result });
+      return this.response(HttpStatusCode.NO_CONTENT, null);
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
-  // public async updateUser(
-  //   req: Request,
-  //   res: Response,
-  //   _next: NextFunction
-  // ) {
-  //   const { body } = req;
-  //   const user = this.payload as IPayload;
-  //   const result = await this.userService.updateUser(user.id, body);
-  //   return res.status(200).json(result);
-  // }
+  public async deleteUser(request: UserController.DeleteUserRequest) {
+    try {
+      const { payload: { id: userId } } = request;
+      await this.userService.deleteUser(userId);
+      
+      return this.response(HttpStatusCode.NO_CONTENT, null);
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+}
 
-  // public async deleteUser(
-  //   req: Request,
-  //   res: Response,
-  //   _next: NextFunction
-  // ) {
-  //   const { params: { id } } = req;
-  //   const result = await this.userService.deleteUser(id);
-  //   return res.status(200).json(result);
-  // }
+declare namespace UserController {
+  export interface CreateUserRequest {
+    name: string;
+    email: string;
+    birthdate: string;
+    password: string;
+  }
 
-  // public async login(
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction
-  // ) {
-  //   const { body: { email, password } } = req;
-  //   const result = await this.userService.login(email, password);
-  //   if (result.error) {
-  //     return next({ status: 404, message: result.error.message });
-  //   }
-  //   return res.status(200).json(result)
-  // }
+  export interface GetUserByIdRequest {
+    userId: string;
+  }
+
+  export interface UpdateUserRequest {
+    payload: Payload;
+    name: string;
+    email: string;
+    birthdate: string;
+    password: string;
+  }
+
+  export interface DeleteUserRequest {
+    payload: Payload;
+  }
 }

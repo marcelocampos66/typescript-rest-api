@@ -1,27 +1,26 @@
 import { NextFunction, Response, Request } from 'express';
-import jwt from 'jsonwebtoken';
+import { decrypt } from '../../infra/cryptography/jwt';
 import { HttpStatusCode } from '../helpers/enum-helper';
 
-const { JWT_SECRET } = process.env;
+const cleanToken = (token: string) => token.split(' ')[1];
 
-const jwtSecret = (JWT_SECRET || '');
-
-export default async (req: Request, res: Response, next: NextFunction) => {
+export const authentication = async (req: Request, res: Response, next: NextFunction) => {
   const { headers: { authorization } } = req;
   if (!authorization) {
-    return res.status(401).json({ message: 'missing auth token' });
+    return res.status(401).json({ error: 'missing auth token' });
   }
   try {
-    const payload = jwt.verify(authorization, jwtSecret) as jwt.JwtPayload;
+    const token: string = cleanToken(authorization);
+    const payload = await decrypt(token);
     
     if (!payload) {
-      return next({ code: 401, message: 'jwt malformed' });
+      return next({ code: HttpStatusCode.UNAUTHORIZED, error: 'jwt malformed' });
     }
 
     req.payload = payload;
 
     return next();
   } catch (error) {
-    return next({ code: 401, message: error.message });
+    return next({ code: HttpStatusCode.UNAUTHORIZED, error: error.message });
   }
 };
