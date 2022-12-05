@@ -13,7 +13,7 @@ export default async (app: Express): Promise<void> => {
   const router = Router();
   app.use('/rest-api', router);
   (await deepReadDir(join(__dirname, '../domains'))).flat(Number.POSITIVE_INFINITY).map(async (file: string) => {
-    if (file.includes('routes')) {
+    if (file.includes('routes') && !file.endsWith('.map')) {
       (await import(file)).default(router);
     }
   })
