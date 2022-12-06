@@ -20,7 +20,6 @@ export class UserService {
 
   public async registerUser(userData: userDTO) {
     const { email, name, birthdate, password } = userData;
-
     const emailAlreadyRegistered = await this.userRepository.getUserByEmail(email);
     if (emailAlreadyRegistered) {
       return;
@@ -39,7 +38,6 @@ export class UserService {
 
   public async updateUser(userId: string, newUserData: userDTO) {
     const { password, email, ...otherInfos } = newUserData;
-
     const hashedPassword = await hash(password);
     const updateUserData = { ...otherInfos, password: hashedPassword };
 

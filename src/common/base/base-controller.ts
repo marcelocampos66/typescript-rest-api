@@ -3,7 +3,7 @@ import { HttpStatusCode } from '../helpers/enum-helper';
 import { HttpResponse } from '../protocols';
 
 export class Controller {
-  public async response(status: number, body: unknown): Promise<HttpResponse> {
+  public async httpResponse(status: number, body: unknown): Promise<HttpResponse> {
     return httpResponse(status, body);
   }
 

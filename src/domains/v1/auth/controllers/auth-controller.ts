@@ -21,10 +21,10 @@ export class AuthController extends Controller {
 
       const token = await this.authService.authenticate({ email, password });
       if (!token) {
-        return this.response(HttpStatusCode.BAD_REQUEST, { error: AuthErrorMessages.invalidCredentials });
+        return this.httpResponse(HttpStatusCode.BAD_REQUEST, { error: AuthErrorMessages.invalidCredentials });
       }
 
-      return this.response(HttpStatusCode.OK, token);
+      return this.httpResponse(HttpStatusCode.OK, token);
     } catch (error) {
       return this.handleError(error);
     }

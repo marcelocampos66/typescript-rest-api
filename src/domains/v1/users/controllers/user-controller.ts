@@ -24,11 +24,11 @@ export class UserController extends Controller {
       const { name, email, birthdate, password }  = request;
       const user = await this.userService.registerUser({ name, email, birthdate, password });
       if (!user) {
-        return this.response(HttpStatusCode.CONFLICT, { error: UsersErrorMessages.emailAlreadyRegistered })
+        return this.httpResponse(HttpStatusCode.CONFLICT, { error: UsersErrorMessages.emailAlreadyRegistered })
       }
       const { userId } = user;
 
-      return this.response(HttpStatusCode.CREATED, { userId });
+      return this.httpResponse(HttpStatusCode.CREATED, { userId });
     } catch (error) {
       return this.handleError(error);
     }
@@ -38,7 +38,7 @@ export class UserController extends Controller {
     try {
       const users = await this.userService.getAllUsers();
     
-      return  this.response(HttpStatusCode.OK, users);
+      return  this.httpResponse(HttpStatusCode.OK, users);
     } catch (error) {
       return this.handleError(error);
     }
@@ -49,10 +49,10 @@ export class UserController extends Controller {
       const { userId } = request;
       const user = await this.userService.getUserById(userId);
       if (!user) {
-        return this.response(HttpStatusCode.NOT_FOUND, { error: UsersErrorMessages.notFound })
+        return this.httpResponse(HttpStatusCode.NOT_FOUND, { error: UsersErrorMessages.notFound })
       }
       
-      return this.response(HttpStatusCode.OK, user);
+      return this.httpResponse(HttpStatusCode.OK, user);
     } catch (error) {
       return this.handleError(error);
     }
@@ -63,7 +63,7 @@ export class UserController extends Controller {
       const { payload, name, email, birthdate, password } = request;
       await this.userService.updateUser(payload.id, { name, email, birthdate, password });
 
-      return this.response(HttpStatusCode.NO_CONTENT, null);
+      return this.httpResponse(HttpStatusCode.NO_CONTENT, null);
     } catch (error) {
       return this.handleError(error);
     }
@@ -74,7 +74,7 @@ export class UserController extends Controller {
       const { payload: { id: userId } } = request;
       await this.userService.deleteUser(userId);
       
-      return this.response(HttpStatusCode.NO_CONTENT, null);
+      return this.httpResponse(HttpStatusCode.NO_CONTENT, null);
     } catch (error) {
       return this.handleError(error);
     }
