@@ -1,4 +1,4 @@
-import MongoClientProvider from '../../../../infra/mongo-client-provider';
+import MongoClientProvider from '../../../../infra/database/mongodb/mongo-client-provider';
 import { injectable } from 'tsyringe';
 import { ObjectId } from 'mongodb';
 import { userDTO, userUpdateDTO } from '../DTOs';

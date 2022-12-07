@@ -1,5 +1,5 @@
 import { connect, disconnect } from 'mongoose';
-import { MONGO_DB_HOST, MONGO_DB } from '../api/config/envs';
+import { MONGO_DB_HOST, MONGO_DB } from '../../../api/config/envs';
 
 class MongoClientProvider {
   async connect() {
