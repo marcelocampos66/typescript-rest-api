@@ -1,50 +1,45 @@
 import 'dotenv/config';
 import { inject, injectable } from 'tsyringe';
-import { hash } from '../../../../infra/cryptography/bcrypt';
-import { userDTO } from '../DTOs';
+import { Cryptography } from '../../../../infra/cryptography';
 import { UserRepository } from '../repositories';
+import { User } from '../entities';
+import { ContainerInstanceTokens, CryptographyContainerInstanceTokens } from '../../../../core/helpers/enums';
+import { BaseService } from '../../../../core/base/base-service';
+import { ConflictError } from '../../../../core/errors';
+import { UsersErrorMessages } from '../helpers/enums';
 
 @injectable()
-export class UserService {
-  private readonly userRepository: UserRepository;
+export class UserService extends BaseService<User> {
+  private readonly crypto: Cryptography;
   
   constructor(
-    @inject('UserRepository') userRepository: UserRepository
+    @inject(ContainerInstanceTokens.USER_REPOSITORY_V1) userRepository: UserRepository,
+    @inject(CryptographyContainerInstanceTokens.CRYPTO_HELPER) cryptoHelper: Cryptography,
   ) {
-    this.userRepository = userRepository;
+    super(userRepository);
+    this.crypto = cryptoHelper;
   }
 
-  public async getAllUsers() {
-    return this.userRepository.getAllUsers();
-  }
-
-  public async registerUser(userData: userDTO) {
-    const { email, name, birthdate, password } = userData;
-    const emailAlreadyRegistered = await this.userRepository.getUserByEmail(email);
+  public async createUser(userData: User) {
+    const { email, name, password } = userData;
+    const emailAlreadyRegistered = await this.repository.findOne({
+      filters: { email }
+    });
     if (emailAlreadyRegistered) {
-      return;
+      throw new ConflictError(UsersErrorMessages.emailAlreadyRegistered)
     }
-    const hashedPassword = await hash(password);
-    const newUserData = { email, name, birthdate, password: hashedPassword };
-    const insertedUser = await this.userRepository.registerUser(newUserData);
-    const userId = insertedUser._id.toString();
 
-    return { userId };
+    const hashedPassword = await this.crypto.encrypt(password);
+    const newUserData = { email, name, password: hashedPassword };
+
+    return this.repository.create(newUserData);
   }
 
-  public async getUserById(userId: string) {
-    return this.userRepository.getUserById(userId);
-  }
+  public async updateProfile(userId: string, newUserData: Partial<User>) {
+    const { password, email, ...rest } = newUserData;
+    const hashedPassword = await this.crypto.encrypt(password);
+    const updateUserData = { ...rest, password: hashedPassword };
 
-  public async updateUser(userId: string, newUserData: userDTO) {
-    const { password, email, ...otherInfos } = newUserData;
-    const hashedPassword = await hash(password);
-    const updateUserData = { ...otherInfos, password: hashedPassword };
-
-    await this.userRepository.updateUser(userId, updateUserData);
-  }
-
-  public async deleteUser(userId: string) {
-    await this.userRepository.deleteUser(userId);
+    await this.repository.update(userId, updateUserData);
   }
 }

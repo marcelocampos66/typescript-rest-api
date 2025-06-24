@@ -1,9 +1,8 @@
 import { Schema } from 'mongoose';
-import { userDTO } from '../DTOs';
+import { User } from '../entities';
 
-export const userSchema = new Schema<userDTO>({
+export const userSchema = new Schema<User>({
   name: { type: String, required: true },
   email: { type: String, required: true },
-  birthdate: { type: String, required: true },
   password: { type: String, required: true },
 });

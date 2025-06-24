@@ -1,5 +1,5 @@
 import { model } from 'mongoose';
 import { userSchema } from '../schemas';
-import { userDTO } from '../DTOs';
+import { User } from '../entities';
 
-export const User = model<userDTO>('User', userSchema);
+export const UserModel = model<User>('User', userSchema);

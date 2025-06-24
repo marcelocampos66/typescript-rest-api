@@ -1,4 +1,4 @@
-FROM node:16.13.0
+FROM node:18.20.4
 
 WORKDIR /usr/app
 
@@ -10,6 +10,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3001:3001
+EXPOSE 8080:8080
 
 CMD ["npm", "start"]

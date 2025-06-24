@@ -8,7 +8,7 @@
 [![Generic badge](https://img.shields.io/badge/Develop-POO-pink?style=for-the-badge&logo=appveyor)](https://shields.io/)
 
 <br/> 
-<h3>Uma API desenvolvida em TypeScript utilizando os padrões REST, arquitetura MSC e que realiza operações de CRUD em um banco de dados não relacional MongoDB.</h3>
+<h3>Uma API desenvolvida em TypeScript utilizando os padrões REST.</h3>
 
 <br/>
 <h3>Rodando o app via Docker</h3>

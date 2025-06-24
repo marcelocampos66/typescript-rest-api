@@ -1,55 +1,67 @@
 import { injectable, inject } from 'tsyringe';
-import { Controller } from '../../../../common/base';
+import { Controller } from '../../../../core/base';
 import { UserService } from '../services';
-import { HttpStatusCode, UsersErrorMessages } from '../../../../common/helpers/enum-helper';
+import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../../../../core/helpers/enums';
+import { HttpStatusCode } from '../../../../core/helpers/http';
+import { UsersErrorMessages } from '../helpers/enums';
+import { SignUp } from '../use-cases';
 
 @injectable()
 export class UserController extends Controller {
   private readonly userService: UserService;
+  private readonly singUp: SignUp;
 
   constructor(
-    @inject('UserService') userService: UserService,
+    @inject(ContainerInstanceTokens.USER_SERVICE_V1) userService: UserService,
+    @inject(UseCasesInstanceTokens.SIGN_UP) singUp: SignUp,
   ) {
     super();
     this.userService = userService;
-    this.registerUser = this.registerUser.bind(this);
-    this.getAllUsers = this.getAllUsers.bind(this);
-    this.getUserById = this.getUserById.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-    this.deleteUser = this.deleteUser.bind(this);
+    this.singUp = singUp;
+    this.signup = this.signup.bind(this);
+    this.createUser = this.createUser.bind(this);
+    this.findUserById = this.findUserById.bind(this);
+    this.listUsers = this.listUsers.bind(this);
+    this.updateProfile = this.updateProfile.bind(this);
   }
 
-  public async registerUser(request: UserController.CreateUserRequest) {
+  public async signup(request: UserController.CreateUserRequest) {
     try {
-      const { name, email, birthdate, password }  = request;
-      const user = await this.userService.registerUser({ name, email, birthdate, password });
-      if (!user) {
-        return this.httpResponse(HttpStatusCode.CONFLICT, { error: UsersErrorMessages.emailAlreadyRegistered })
-      }
-      const { userId } = user;
+      const user = await this.singUp.execute(request);
 
-      return this.httpResponse(HttpStatusCode.CREATED, { userId });
+      return this.httpResponse(HttpStatusCode.CREATED, user);
     } catch (error) {
       return this.handleError(error);
     }
   }
 
-  public async getAllUsers(_request: unknown) {
+  public async createUser(request: UserController.CreateUserRequest) {
     try {
-      const users = await this.userService.getAllUsers();
-    
-      return  this.httpResponse(HttpStatusCode.OK, users);
+      const { name, email, password }  = request;
+      const user = await this.userService.createUser({ name, email, password });
+
+      return this.httpResponse(HttpStatusCode.CREATED, user);
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  public async listUsers() {
+    try {
+      const users = await this.userService.list();
+
+      return this.httpResponse(HttpStatusCode.OK, users);
     } catch (error) {
       return this.handleError(error);
     }
   }
  
-  public async getUserById(request: UserController.GetUserByIdRequest) {
+  public async findUserById(request: UserController.FindUserByIdRequest) {
     try {
       const { userId } = request;
-      const user = await this.userService.getUserById(userId);
+      const user = await this.userService.findById(userId);
       if (!user) {
-        return this.httpResponse(HttpStatusCode.NOT_FOUND, { error: UsersErrorMessages.notFound })
+        return this.httpResponse(HttpStatusCode.NOT_FOUND, { message: UsersErrorMessages.notFound })
       }
       
       return this.httpResponse(HttpStatusCode.OK, user);
@@ -58,22 +70,11 @@ export class UserController extends Controller {
     }
   }
   
-  public async updateUser(request: UserController.UpdateUserRequest) {
+  public async updateProfile(request: UserController.UpdateUserRequest) {
     try {
-      const { payload, name, email, birthdate, password } = request;
-      await this.userService.updateUser(payload.id, { name, email, birthdate, password });
+      const { auth, name, email, password } = request;
+      await this.userService.updateProfile(auth.id, { name, email, password });
 
-      return this.httpResponse(HttpStatusCode.NO_CONTENT, null);
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  public async deleteUser(request: UserController.DeleteUserRequest) {
-    try {
-      const { payload: { id: userId } } = request;
-      await this.userService.deleteUser(userId);
-      
       return this.httpResponse(HttpStatusCode.NO_CONTENT, null);
     } catch (error) {
       return this.handleError(error);
@@ -85,23 +86,18 @@ declare namespace UserController {
   export interface CreateUserRequest {
     name: string;
     email: string;
-    birthdate: string;
     password: string;
+    passwordConfirmation: string;
   }
 
-  export interface GetUserByIdRequest {
+  export interface FindUserByIdRequest {
     userId: string;
   }
 
   export interface UpdateUserRequest {
-    payload: Payload;
+    auth: Payload;
     name: string;
     email: string;
-    birthdate: string;
     password: string;
-  }
-
-  export interface DeleteUserRequest {
-    payload: Payload;
   }
 }

@@ -1,32 +1,36 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
 import { UserController } from '../controllers';
-import { routeAdapter } from '../../../../api/adapters';
-import { authentication, joiMiddleware } from '../../../../common/middlewares';
-import { joiUserRegister, joiGetUserById } from '../schemas';
+import { routeAdapter } from '../../../../application/adapters';
+import { authMiddleware, requestValidatorMiddleware } from '../../../../core/middlewares';
+import { getUserByIdRequestSchema, userRegisterRequestSchema, userUpdateRequestSchema } from '../schemas';
+import { ContainerInstanceTokens } from '../../../../core/helpers/enums';
+import { ClientProviders } from "../../../../data/protocols/database";
 
-const controller: UserController = container.resolve(UserController);
+const controller: UserController = container.resolve(ContainerInstanceTokens.USER_CONTROLLER_V1);
 
 export default (router: Router): void => {
-  router.post('/v1/users/sign-up', [
-    joiMiddleware(joiUserRegister),
-    routeAdapter(controller.registerUser),
+  router.post('/users/sign-up', [
+    requestValidatorMiddleware(userRegisterRequestSchema),
+    routeAdapter(controller.signup),
   ]);
-  router.get('/v1/users', [
-    authentication,
-    routeAdapter(controller.getAllUsers),
+  router.post('/users', [
+    authMiddleware,
+    requestValidatorMiddleware(userRegisterRequestSchema),
+    routeAdapter(controller.createUser, { transactional: true, clientProvider: ClientProviders.MONGODB }),
   ]);
-  router.get('/v1/users/:userId', [
-    authentication,
-    joiMiddleware(joiGetUserById),
-    routeAdapter(controller.getUserById),
+  router.get('/users', [
+    authMiddleware,
+    routeAdapter(controller.listUsers),
   ]);
-  router.put('/v1/users', [
-    authentication,
-    routeAdapter(controller.updateUser),
+  router.get('/users/:userId', [
+    authMiddleware,
+    requestValidatorMiddleware(getUserByIdRequestSchema),
+    routeAdapter(controller.findUserById),
   ]);
-  router.delete('/v1/users', [
-    authentication,
-    routeAdapter(controller.deleteUser),
+  router.put('/users/update-profile', [
+    authMiddleware,
+    requestValidatorMiddleware(userUpdateRequestSchema),
+    routeAdapter(controller.updateProfile),
   ]);
 }
