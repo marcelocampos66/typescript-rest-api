@@ -1,12 +1,11 @@
-import { ProjectionType } from 'mongoose';
-import { Find, FindPaginated, Identificator, Page, Populate, Result } from './repository';
+import { Find, FindPaginated, Identificator, Page, Populate, Result, Projection } from './repository';
 
 export interface FindByIdService<T> {
   findById(
     id: Identificator,
     options?: {
       populate?: Populate;
-      select?: ProjectionType<T>;
+      select?: Projection<T>;
       withDeleted?: boolean;
     },
   ): Promise<Result<T> | null>;
@@ -34,7 +33,7 @@ export interface UpdateService<T> {
     props: Partial<T>,
     options?: {
       populate?: Populate;
-      select?: ProjectionType<T>;
+      select?: Projection<T>;
       withDeleted?: boolean;
     }
   ): Promise<Result<T>>;

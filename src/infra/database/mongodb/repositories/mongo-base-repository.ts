@@ -1,4 +1,4 @@
-import { Model, ProjectionType, ClientSession, Types } from 'mongoose';
+import { Model, ProjectionType, ClientSession, Types, FilterQuery, PopulateOptions } from 'mongoose';
 import {
   Find,
   CreateRepository,
@@ -18,6 +18,9 @@ import {
 } from '../../../../core/protocols/repository';
 import contextStorage from '../../../../core/context/context-storage';
 
+export type MongoFilterQuery<T> = FilterQuery<T>;
+export type MongoPopulate = string | string[] | PopulateOptions | PopulateOptions[];
+export type MongoProjection<T> = ProjectionType<T>;
 export type MongoResult<T> = T & { _id: Types.ObjectId, createdAt: Date; updatedAt: Date };
 
 class MongoBaseRepositoryHelpers {
@@ -35,7 +38,7 @@ class MongoBaseRepositoryHelpers {
 export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListRepository<T>, PaginateRepository<T>, FindOneRepository<T>, CreateRepository<T>, UpdateRepository<T>, DisableRepository<T>, RestoreRepository<T>, DeleteRepository<T> {
   constructor(protected model: Model<T>) {}
 
-  async findById(id: Identificator, options?: { populate?: Populate; select?: ProjectionType<T>; withDeleted?: boolean; }): Promise<Result<T>> {
+  async findById(id: Identificator, options?: { populate?: MongoPopulate; select?: MongoProjection<T>; withDeleted?: boolean; }): Promise<Result<T>> {
     const store = contextStorage.getStore() as { session?: ClientSession };
 
     const document = await <Promise<MongoResult<T> | null>>this.model
@@ -60,19 +63,21 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
 
   async list({ filters, populate, select, sort, withDeleted }: Find<T> = {}): Promise<Result<T>[]> {
     const store = contextStorage.getStore() as { session?: ClientSession };
+    const populateProps = populate as MongoPopulate;
+    const filtersProps = filters as MongoFilterQuery<T>;
 
-    const documentList = await <Promise<Result<T>[]>>this.model
+    const documentList = await <Promise<Result<T>[]>><unknown>this.model
       .find(
         {
           deleted: {
             $in: [null, false, withDeleted],
           },
-          ...filters,
+          ...filtersProps,
         },
         select,
         {
           session: store?.session || null,
-          populate,
+          populate: populateProps,
           sort: sort || { _id: -1 },
         }
       )
@@ -92,6 +97,8 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
     select,
   }: FindPaginated<T>): Promise<Page<Result<T>>> {
     const store = contextStorage.getStore() as { session?: ClientSession };
+    const filtersProps = filters as MongoFilterQuery<T>;
+    const populateProps = populate as MongoPopulate;
 
     const [docs, total] = await Promise.all([
       this.model
@@ -99,11 +106,11 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
           deleted: {
             $in: [null, false, withDeleted],
           },
-          ...filters,
+          ...filtersProps,
         })
         .setOptions({
           session: store?.session || null,
-          populate,
+          populate: populateProps,
           sort: sort || { _id: -1 },
           projection: select,
           limit: size,
@@ -116,7 +123,7 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
           deleted: {
             $in: [null, false, withDeleted],
           },
-          ...filters,
+          ...filtersProps,
         })
         .exec(),
     ]);
@@ -129,6 +136,8 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
 
   async findOne({ filters, populate, select, sort, withDeleted }: Find<T> = {}): Promise<Result<T> | null> {
     const store = contextStorage.getStore() as { session?: ClientSession };
+    const populateProps = populate as MongoPopulate;
+    const filtersProps = filters as MongoFilterQuery<T>;
     
     const document = await <Promise<MongoResult<T> | null>>this.model
       .findOne(
@@ -136,12 +145,12 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
           deleted: {
             $in: [null, false, withDeleted],
           },
-          ...filters,
+          ...filtersProps,
         },
         select,
         {
           session: store?.session || null,
-          populate,
+          populate: populateProps,
           sort: sort || { _id: -1 },
         }
       )
@@ -163,7 +172,7 @@ export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListReposi
     return MongoBaseRepositoryHelpers.formatDocument<T>(mongoDocument);
   }
 
-  async update(id: Identificator, props: Partial<T>, options?: { populate?: Populate; select?: ProjectionType<T>; withDeleted?: boolean; }): Promise<Result<T>> {
+  async update(id: Identificator, props: Partial<T>, options?: { populate?: MongoPopulate; select?: MongoProjection<T>; withDeleted?: boolean; }): Promise<Result<T>> {
     const store = contextStorage.getStore() as { session?: ClientSession };
     
     const updatedDocument = await <Promise<MongoResult<T> | null>>this.model

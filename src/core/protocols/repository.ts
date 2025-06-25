@@ -1,17 +1,14 @@
-import { FilterQuery, PopulateOption, ProjectionType } from 'mongoose';
-
 export type Identificator = string | number | unknown;
 
 export type Result<T> = T & { id: Identificator, createdAt: Date; updatedAt: Date };
 
-export type Filters<T> = FilterQuery<T>;
-export type Populate = PopulateOption;
-export type Sort<T> = { [k in keyof T]?: 1 | -1 };
+export type Filters<T> = { [K in keyof T]?: unknown } | unknown;
 
-// export type Filters<T> = Record<string, any> | unknown; // Genérico para suportar qualquer estratégia de filtro
-// export type Projection<T> = { [K in keyof T]?: boolean } | unknown; // array de campos ou objeto
-// export type Populate = string | string[] | Record<string, unknown> | unknown; // genérico, depende do banco
-// export type Sort<T> = { [K in keyof T]?: 'asc' | 'desc' | 1 | -1 };
+export type Projection<T> = { [K in keyof T]?: boolean } | unknown;
+
+export type Populate =  unknown;
+
+export type Sort<T> = { [K in keyof T]?: 'asc' | 'desc' | 1 | -1 | 'ascending' | 'descending' };
 
 export type Page<T> = {
   docs: T[];
@@ -27,7 +24,7 @@ export type FindByKey<T> = {
   id: Identificator
   options?: {
     populate?: Populate;
-    select?: ProjectionType<T>;
+    select?: Projection<T>;
     withDeleted?: boolean;
   },
 }
@@ -35,7 +32,7 @@ export type FindByKey<T> = {
 export type Find<T> = {
   filters?: Filters<T>;
   populate?: Populate;
-  select?: ProjectionType<T>;
+  select?: Projection<T>;
   sort?: Sort<T>;
   withDeleted?: boolean;
 };
@@ -47,7 +44,7 @@ export interface FindByIdRepository<T> {
     id: Identificator,
     options?: {
       populate?: Populate;
-      select?: ProjectionType<T>;
+      select?: Projection<T>;
       withDeleted?: boolean;
     }
   ): Promise<Result<T> | null>;
@@ -79,7 +76,7 @@ export interface UpdateRepository<T> {
     props: Partial<T>,
     options?: {
       populate?: Populate;
-      select?: ProjectionType<T>;
+      select?: Projection<T>;
       withDeleted?: boolean;
     }
   ): Promise<Result<T>>;
