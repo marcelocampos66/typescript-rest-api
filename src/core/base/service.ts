@@ -1,6 +1,6 @@
-import { ProjectionType } from "mongoose";
-import { Find, FindByIdRepository, FindPaginated, Identificator, Page, Populate, Result } from "../protocols/repository";
-import { FindByIdService, ListService, PaginateService, FindOneService, CreateService, UpdateService, DisableService, RestoreService, DeleteService } from "../protocols/service";
+import { Find, FindByIdRepository, FindPaginated, Page, Populate, Result, Projection } from '../protocols/repository';
+import { FindByIdService, ListService, PaginateService, FindOneService, CreateService, UpdateService, DisableService, RestoreService, DeleteService } from '../protocols/service';
+import { Identificator } from '../protocols';
 
 type Repository<T> = FindByIdRepository<T> 
   & ListService<T> 
@@ -12,10 +12,10 @@ type Repository<T> = FindByIdRepository<T>
   & RestoreService<T>
   & DeleteService<T>;
 
-export class BaseService<T> implements FindByIdService<T>, ListService<T>, PaginateService<T>, FindOneService<T>, CreateService<T>, UpdateService<T>, DisableService<T>, RestoreService<T>, DeleteService<T> {
+export class Service<T> implements FindByIdService<T>, ListService<T>, PaginateService<T>, FindOneService<T>, CreateService<T>, UpdateService<T>, DisableService<T>, RestoreService<T>, DeleteService<T> {
   constructor(protected repository: Repository<T>) {}
 
-  async findById(id: Identificator, options?: { populate?: Populate; select?: ProjectionType<T>; withDeleted?: boolean; }): Promise<Result<T>> {
+  async findById(id: Identificator, options?: { populate?: Populate; select?: Projection<T>; withDeleted?: boolean; }): Promise<Result<T>> {
     return this.repository.findById(id, options);
   }
 
@@ -35,7 +35,7 @@ export class BaseService<T> implements FindByIdService<T>, ListService<T>, Pagin
     return this.repository.create(props);
   }
 
-  async update(id: Identificator, props: Partial<T>, options?: { populate?: Populate; select?: ProjectionType<T>; withDeleted?: boolean; }): Promise<Result<T>> {
+  async update(id: Identificator, props: Partial<T>, options?: { populate?: Populate; select?: Projection<T>; withDeleted?: boolean; }): Promise<Result<T>> {
     return this.repository.update(id, props, options)
   }
 

@@ -1,2 +1,1 @@
-export * from './user-request-validators-schema';
-export * from './user-schema';
+export * from './request-validators-schema';

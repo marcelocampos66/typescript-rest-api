@@ -1,6 +1,7 @@
-export type Identificator = string | number | unknown;
+import { Identificator, Entity } from "./entity";
 
-export type Result<T> = T & { id: Identificator, createdAt: Date; updatedAt: Date };
+// export type Result<T> = T & { id: Identificator, createdAt: Date; updatedAt: Date };
+export type Result<T> = T & Entity;
 
 export type Filters<T> = { [K in keyof T]?: unknown } | unknown;
 
@@ -79,7 +80,7 @@ export interface UpdateRepository<T> {
       select?: Projection<T>;
       withDeleted?: boolean;
     }
-  ): Promise<Result<T>>;
+  ): Promise<Entity>;
 }
 
 export interface DisableRepository<T> {

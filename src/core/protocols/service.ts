@@ -1,4 +1,5 @@
-import { Find, FindPaginated, Identificator, Page, Populate, Result, Projection } from './repository';
+import { Identificator } from './entity';
+import { Find, FindPaginated, Page, Populate, Result, Projection } from './repository';
 
 export interface FindByIdService<T> {
   findById(

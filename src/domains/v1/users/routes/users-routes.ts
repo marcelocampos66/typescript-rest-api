@@ -28,7 +28,7 @@ export default (router: Router): void => {
     requestValidatorMiddleware(getUserByIdRequestSchema),
     routeAdapter(controller.findUserById),
   ]);
-  router.put('/users/update-profile', [
+  router.put('/users/profile', [
     authMiddleware,
     requestValidatorMiddleware(userUpdateRequestSchema),
     routeAdapter(controller.updateProfile),

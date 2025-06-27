@@ -4,12 +4,12 @@ import { Cryptography } from '../../../../infra/cryptography';
 import { UserRepository } from '../repositories';
 import { User } from '../entities';
 import { ContainerInstanceTokens, CryptographyContainerInstanceTokens } from '../../../../core/helpers/enums';
-import { BaseService } from '../../../../core/base/base-service';
+import { Service } from '../../../../core/base';
 import { ConflictError } from '../../../../core/errors';
 import { UsersErrorMessages } from '../helpers/enums';
 
 @injectable()
-export class UserService extends BaseService<User> {
+export class UserService extends Service<User> {
   private readonly crypto: Cryptography;
   
   constructor(

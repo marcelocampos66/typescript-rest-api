@@ -6,8 +6,6 @@ import {
   Result,
   FindByIdRepository,
   ListRepository,
-  Identificator,
-  Populate,
   PaginateRepository,
   FindPaginated,
   Page,
@@ -16,6 +14,7 @@ import {
   DisableRepository,
   RestoreRepository,
 } from '../../../../core/protocols/repository';
+import { Identificator } from 'src/core/protocols/entity';
 import contextStorage from '../../../../core/context/context-storage';
 
 export type MongoFilterQuery<T> = FilterQuery<T>;
@@ -35,7 +34,7 @@ class MongoBaseRepositoryHelpers {
   }
 }
 
-export class MongoBaseRepository<T> implements FindByIdRepository<T>, ListRepository<T>, PaginateRepository<T>, FindOneRepository<T>, CreateRepository<T>, UpdateRepository<T>, DisableRepository<T>, RestoreRepository<T>, DeleteRepository<T> {
+export class MongoRepository<T> implements FindByIdRepository<T>, ListRepository<T>, PaginateRepository<T>, FindOneRepository<T>, CreateRepository<T>, UpdateRepository<T>, DisableRepository<T>, RestoreRepository<T>, DeleteRepository<T> {
   constructor(protected model: Model<T>) {}
 
   async findById(id: Identificator, options?: { populate?: MongoPopulate; select?: MongoProjection<T>; withDeleted?: boolean; }): Promise<Result<T>> {

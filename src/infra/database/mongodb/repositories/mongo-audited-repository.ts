@@ -1,9 +1,11 @@
-import { Model, Schema, model, ProjectionType } from 'mongoose';
-import { MongoBaseRepository } from './mongo-base-repository';
-import { Identificator, Populate, Result } from '../../../../core/protocols/repository';
+import { Model } from 'mongoose';
+import { MongoPopulate, MongoProjection, MongoRepository } from './mongo-repository';
+import { Result } from '../../../../core/protocols/repository';
+import { Identificator } from 'src/core/protocols';
+import { AuditModel } from '../models';
 import contextStorage from '../../../../core/context/context-storage';
 
-enum Operations {
+export const enum Operations {
   INSERT = 'INSERT',
   UPDATE = 'UPDATE',
   LOGICAL_DELETE = 'LOGICAL_DELETE',
@@ -11,7 +13,7 @@ enum Operations {
   HARD_DELETE = 'HARD_DELETE',
 }
 
-class Audit {
+export class Audit {
   entity: string;
   operation: string;
   registry: Identificator;
@@ -26,7 +28,7 @@ class Audit {
     auditedAt,
   }: {
     entity: string;
-    operation: string;
+    operation: Operations;
     registry: Identificator;
     auditedAt: Date;
     modifiedBy: string;
@@ -39,26 +41,13 @@ class Audit {
   }
 }
 
-const AuditSchema = new Schema<Audit>(
-  {
-    entity: { type: String, required: true },
-    operation: Operations,
-    registry: Schema.Types.Mixed,
-    auditedAt: { type: Date, required: true },
-    modifiedBy: Schema.Types.Mixed,
-  },
-  { strict: false, versionKey: false },
-);
-
-const AuditModel = model('Audit', AuditSchema);
-
-class AuditRepository extends MongoBaseRepository<Audit> {
+class AuditRepository extends MongoRepository<Audit> {
   constructor() {
     super(AuditModel);
   }
 }
 
-class MongoAuditedRepository<T> extends MongoBaseRepository<T> {
+class MongoAuditedRepository<T> extends MongoRepository<T> {
   private readonly auditRepository: AuditRepository = new AuditRepository();
 
   constructor(model: Model<T>) {
@@ -91,9 +80,9 @@ class MongoAuditedRepository<T> extends MongoBaseRepository<T> {
     id: Identificator,
     props: Partial<T>,
     options?: {
-      populate?: Populate;
-      select?: ProjectionType<T>;
-      withDeleted?: boolean
+      populate?: MongoPopulate;
+      select?: MongoProjection<T>;
+      withDeleted?: boolean;
     }
   ): Promise<Result<T>> {
     const store = contextStorage.getStore() as { audit?: { user: string } };

@@ -1,10 +1,10 @@
 import { injectable } from 'tsyringe';
-import { UserModel } from '../models';
-import { MongoBaseRepository } from '../../../../infra/database/mongodb/repositories/mongo-base-repository';
 import { User } from '../entities';
+import { UserModel } from '../../../../infra/database/mongodb/models';
+import { MongoRepository } from '../../../../infra/database/mongodb/repositories/mongo-repository';
 
 @injectable()
-export class UserRepository extends MongoBaseRepository<User> {
+export class UserRepository extends MongoRepository<User> {
   constructor() {
     super(UserModel);
   }
