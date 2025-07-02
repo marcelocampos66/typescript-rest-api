@@ -12,7 +12,7 @@ export type Populate =  unknown;
 export type Sort<T> = { [K in keyof T]?: 'asc' | 'desc' | 1 | -1 | 'ascending' | 'descending' };
 
 export type Page<T> = {
-  docs: T[];
+  data: T[];
   total: number;
 };
 

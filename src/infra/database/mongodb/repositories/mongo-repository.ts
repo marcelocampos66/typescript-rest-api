@@ -128,7 +128,7 @@ export class MongoRepository<T> implements FindByIdRepository<T>, ListRepository
     ]);
 
     return {
-      docs: <Result<T>[]>docs.map(MongoBaseRepositoryHelpers.formatDocument),
+      data: <Result<T>[]>docs.map(MongoBaseRepositoryHelpers.formatDocument),
       total,
     };
   }

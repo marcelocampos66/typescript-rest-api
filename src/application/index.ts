@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import '../core/container';
 import logger from './config/logger';
-import HttpServer from './http-server';
+import ApplicationServer from './application-server';
 import MongoClientProvider from '../infra/database/mongodb/mongo-client-provider';
 import { PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE } from './config/env';
 
@@ -13,8 +13,8 @@ import { PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE } from './config/env';
       appName: 'rest-api',
       maxPoolSize: MONGO_DB_POOL_SIZE,
     });
-    const server = new HttpServer();
-    server.startHttpServer(PORT);
+    const server = new ApplicationServer();
+    server.startServer(PORT);
   } catch (error) {
     logger.error('Error on server init', { error });
   }
