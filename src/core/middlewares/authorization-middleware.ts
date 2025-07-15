@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { injectable } from 'tsyringe';
+import { HttpResponse, Middleware } from '../protocols';
+import { httpResponse, HttpStatusCode } from '../helpers/http';
 import { UnauthorizedError } from '../errors';
 
-export const authorizationMiddleware = async (roles: any) => {
-  return async (request: Request, response: Response, next: NextFunction) => {
-    // TODO -> when app has roles, put the role on auth payload and validate on this middleware
-
-    next();
+@injectable()
+export class AuthorizationMiddleware implements Middleware {
+  public async handle(_httpRequest: unknown) {
+    return httpResponse(HttpStatusCode.OK, {});    
   }
 }

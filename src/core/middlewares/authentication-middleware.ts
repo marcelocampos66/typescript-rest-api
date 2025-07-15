@@ -1,29 +1,45 @@
-import { NextFunction, Response, Request } from 'express';
-import { container } from 'tsyringe';
-import { HttpStatusCode } from '../helpers/http';
+import { inject, injectable } from 'tsyringe';
+import { httpResponse, HttpStatusCode } from '../helpers/http';
 import { JwtCryptography } from '../../infra/cryptography';
 import { CryptographyContainerInstanceTokens } from '../helpers/enums';
+import { HttpResponse, Middleware } from '../protocols';
+import { UnauthorizedError } from '../errors';
 
-const cleanToken = (token: string) => token.split(' ').pop();
-const jwtCryptography: JwtCryptography = container.resolve(CryptographyContainerInstanceTokens.JWT_CRYPTO_HELPER)
+@injectable()
+export class AuthMiddleware implements Middleware {
+  private readonly jwtCryptography: JwtCryptography;
 
-export const authMiddleware = async (request: Request, response: Response, next: NextFunction) => {
-  const { headers: { authorization } } = request;
-  if (!authorization) {
-    return response.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'missing auth token' });
+  constructor(
+    @inject(CryptographyContainerInstanceTokens.JWT_CRYPTO_HELPER) jwtCryptography,
+  ) {
+    this.jwtCryptography = jwtCryptography;
   }
-  try {
-    const token: string = cleanToken(authorization);
-    const payload = await jwtCryptography.decrypt(token);
-    
-    if (!payload) {
-      return response.status(HttpStatusCode.UNAUTHORIZED).json({ message: 'jwt malformed' });
+
+  private cleanToken(token: string): string {
+    return token.split(' ').pop();
+  }
+
+  public async handle(request: AuthMiddleware.Request) {
+    try {
+      if (!request.accessToken) {
+        return httpResponse(HttpStatusCode.UNAUTHORIZED, { message: 'missing auth token' });
+      }
+      const token: string = this.cleanToken(request.accessToken);
+      const payload = await this.jwtCryptography.decrypt(token);
+      if (!payload) {
+        return httpResponse(HttpStatusCode.UNAUTHORIZED, { message: 'jwt malformed' });
+      }
+
+      return httpResponse(HttpStatusCode.OK, { accessToken: request.accessToken, auth: payload });
+    } catch (error) {
+      throw new UnauthorizedError(error.message);
     }
-
-    request.auth = payload;
-
-    return next();
-  } catch (error) {
-    return response.status(HttpStatusCode.UNAUTHORIZED).json({ message: error.message });
   }
-};
+}
+
+
+export namespace AuthMiddleware {
+  export type Request = {
+    accessToken?: string
+  }
+}

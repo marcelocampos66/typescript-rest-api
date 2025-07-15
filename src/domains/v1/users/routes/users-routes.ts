@@ -1,36 +1,38 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
 import { UserController } from '../controllers';
-import { routeAdapter } from '../../../../application/adapters';
-import { authMiddleware, requestValidatorMiddleware } from '../../../../core/middlewares';
+import { routeAdapter, middlewareAdapter } from '../../../../application/adapters';
+import { AuthMiddleware, RequestValidatorMiddleware } from '../../../../core/middlewares';
 import { getUserByIdRequestSchema, userRegisterRequestSchema, userUpdateRequestSchema } from '../schemas';
-import { ContainerInstanceTokens } from '../../../../core/helpers/enums';
+import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../core/helpers/enums';
 import { ClientProviders } from "../../../../data/protocols/database";
 
 const controller: UserController = container.resolve(ContainerInstanceTokens.USER_CONTROLLER_V1);
+const authMiddleware: AuthMiddleware = container.resolve(MiddlewareIntanceTokens.AUTH);
+const requestValidatorMiddleware: RequestValidatorMiddleware = container.resolve(MiddlewareIntanceTokens.REQUEST_VALIDATOR);
 
 export default (router: Router): void => {
   router.post('/users/sign-up', [
-    requestValidatorMiddleware(userRegisterRequestSchema),
+    middlewareAdapter(requestValidatorMiddleware, userRegisterRequestSchema),
     routeAdapter(controller.signup),
   ]);
   router.post('/users', [
-    authMiddleware,
-    requestValidatorMiddleware(userRegisterRequestSchema),
+    middlewareAdapter(authMiddleware),
+    middlewareAdapter(requestValidatorMiddleware, userRegisterRequestSchema),
     routeAdapter(controller.createUser, { transactional: true, clientProvider: ClientProviders.MONGODB }),
   ]);
   router.get('/users', [
-    authMiddleware,
+    middlewareAdapter(authMiddleware),
     routeAdapter(controller.listUsers),
   ]);
   router.get('/users/:userId', [
-    authMiddleware,
-    requestValidatorMiddleware(getUserByIdRequestSchema),
+    middlewareAdapter(authMiddleware),
+    middlewareAdapter(requestValidatorMiddleware, getUserByIdRequestSchema),
     routeAdapter(controller.findUserById),
   ]);
   router.put('/users/profile', [
-    authMiddleware,
-    requestValidatorMiddleware(userUpdateRequestSchema),
+    middlewareAdapter(authMiddleware),
+    middlewareAdapter(requestValidatorMiddleware, userUpdateRequestSchema),
     routeAdapter(controller.updateProfile),
   ]);
 }

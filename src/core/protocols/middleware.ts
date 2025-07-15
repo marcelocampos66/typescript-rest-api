@@ -1,5 +1,5 @@
 import { HttpResponse } from './';
 
 export interface Middleware<T = unknown> {
-  handle: (httpRequest: T) => Promise<HttpResponse>
+  handle(httpRequest: T, ...args: unknown[]): Promise<HttpResponse>;
 }

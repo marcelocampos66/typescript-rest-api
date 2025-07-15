@@ -1,13 +1,14 @@
-import { NextFunction, Response, Request } from 'express';
 import joi from 'joi';
-import { HttpStatusCode } from '../helpers/http';
+import { httpResponse, HttpStatusCode } from '../helpers/http';
+import { Middleware } from '../protocols';
 
-export const requestValidatorMiddleware = (schema: joi.ObjectSchema) => {
-  return async (request: Request, response: Response, next: NextFunction) => {
+export class RequestValidatorMiddleware implements Middleware {
+  async handle(request: unknown, schema: joi.ObjectSchema) {
     const { error } = schema.validate(request, { abortEarly: false, allowUnknown: true });
     if (error) {
-      return response.status(HttpStatusCode.UNPROCESSABLE_ENTITY).json({ message: error.details[0].message });
+      return httpResponse(HttpStatusCode.UNPROCESSABLE_ENTITY, { message: error.details[0].message });
     }
-    return next();
+
+    return httpResponse(HttpStatusCode.OK);
   }
-};
+}

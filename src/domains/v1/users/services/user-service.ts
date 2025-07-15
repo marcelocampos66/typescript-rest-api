@@ -14,10 +14,10 @@ export class UserService extends Service<User> {
   
   constructor(
     @inject(ContainerInstanceTokens.USER_REPOSITORY_V1) userRepository: UserRepository,
-    @inject(CryptographyContainerInstanceTokens.CRYPTO_HELPER) cryptoHelper: Cryptography,
+    @inject(CryptographyContainerInstanceTokens.CRYPTO_HELPER) crypto: Cryptography,
   ) {
     super(userRepository);
-    this.crypto = cryptoHelper;
+    this.crypto = crypto;
   }
 
   public async createUser(userData: User) {

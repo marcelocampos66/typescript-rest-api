@@ -14,3 +14,8 @@ export enum ContainerInstanceTokens {
 export enum UseCasesInstanceTokens {
   SIGN_UP = 'SignUp',
 }
+
+export enum MiddlewareIntanceTokens {
+  AUTH = 'Auth',
+  REQUEST_VALIDATOR = 'RequestValidator',
+}
