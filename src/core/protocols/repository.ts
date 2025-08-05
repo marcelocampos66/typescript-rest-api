@@ -13,7 +13,11 @@ export type Sort<T> = { [K in keyof T]?: 'asc' | 'desc' | 1 | -1 | 'ascending' |
 
 export type Page<T> = {
   data: T[];
-  total: number;
+  _pagination: {
+    total: number;
+    page: number;
+    limit: number;
+  };
 };
 
 export type PageRequest = {

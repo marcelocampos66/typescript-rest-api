@@ -10,6 +10,7 @@ export const middlewareAdapter = (middleware: Middleware, ...args: unknown[]) =>
       ...(request.params && { params: request.params }),
       ...(request.query && { query: request.query }),
     }
+    
     const httpResponse: HttpResponse = await middleware.handle(httpRequest, ...args);
     
     if (httpResponse.statusCode === 200) {

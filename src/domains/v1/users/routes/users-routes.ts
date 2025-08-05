@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 import { UserController } from '../controllers';
 import { routeAdapter, middlewareAdapter } from '../../../../application/adapters';
 import { AuthMiddleware, RequestValidatorMiddleware } from '../../../../core/middlewares';
-import { getUserByIdRequestSchema, userRegisterRequestSchema, userUpdateRequestSchema } from '../schemas';
+import { getUserByIdRequestSchema, userRegisterRequestSchema, userUpdateRequestSchema, getUsersRequestSchema } from '../schemas';
 import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../core/helpers/enums';
 import { ClientProviders } from "../../../../data/protocols/database";
 
@@ -23,6 +23,7 @@ export default (router: Router): void => {
   ]);
   router.get('/users', [
     middlewareAdapter(authMiddleware),
+    middlewareAdapter(requestValidatorMiddleware, getUsersRequestSchema),
     routeAdapter(controller.listUsers),
   ]);
   router.get('/users/:userId', [

@@ -2,8 +2,10 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import '../core/container';
 import logger from './config/logger';
-import ApplicationServer from './application-server';
+import ExpressServerAdapter from './adapters/express-server-adapter';
 import MongoClientProvider from '../infra/database/mongodb/mongo-client-provider';
+import expressConfigRoutes from '../routes/routes'
+import { ContentTypeMiddleware } from '../core/middlewares';
 import { PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE } from './config/env';
 
 (async () => {
@@ -13,7 +15,9 @@ import { PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE } from './config/env';
       appName: 'rest-api',
       maxPoolSize: MONGO_DB_POOL_SIZE,
     });
-    const server = new ApplicationServer();
+    const server = new ExpressServerAdapter();
+    server.setupRoutes(expressConfigRoutes);
+    server.setupMiddlewares([ContentTypeMiddleware]);
     server.startServer(PORT);
   } catch (error) {
     logger.error('Error on server init', { error });

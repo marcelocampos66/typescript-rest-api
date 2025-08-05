@@ -46,9 +46,12 @@ export class UserController extends Controller {
     }
   }
 
-  public async listUsers() {
+  public async listUsers(request: { page: number; size: number }) {
     try {
-      const users = await this.userService.list();
+      const users = await this.userService.paginate({
+        page: request.page,
+        size: request.size,
+      });
 
       return this.httpResponse(HttpStatusCode.OK, users);
     } catch (error) {
