@@ -34,7 +34,7 @@ interface FinalFormattedResponse<T> {
   [key: string]: any; // Permite outras propriedades no nível raiz, se necessário
 }
 
-class ExpressHttpServerAdapter implements HttpServer {
+export class ExpressServerAdapter implements HttpServer {
   private readonly server: express.Express = express();
 
   constructor() {
@@ -162,5 +162,3 @@ class ExpressHttpServerAdapter implements HttpServer {
     });
   }
 }
-
-export default ExpressHttpServerAdapter;

@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import '../core/container';
 import logger from './config/logger';
-import ExpressServerAdapter from './adapters/express-server-adapter';
 import MongoClientProvider from '../infra/database/mongodb/mongo-client-provider';
+import { ExpressServerAdapter } from './adapters';
 import expressConfigRoutes from '../routes/routes'
 import { ContentTypeMiddleware } from '../core/middlewares';
 import { PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE } from './config/env';
