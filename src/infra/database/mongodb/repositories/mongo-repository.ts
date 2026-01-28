@@ -130,9 +130,9 @@ export class MongoRepository<T> implements FindByIdRepository<T>, ListRepository
     return {
       data: <Result<T>[]>docs.map(MongoBaseRepositoryHelpers.formatDocument),
       _pagination: {
-        total,
-        page,
-        limit: size,
+        total: Number(total),
+        page: Number(page),
+        limit: Number(size),
       },
     };
   }

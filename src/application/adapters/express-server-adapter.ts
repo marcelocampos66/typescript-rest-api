@@ -15,7 +15,7 @@ interface Links {
   self?: Link;
   update?: Link;
   delete?: Link;
-  [key: string]: Link | undefined; // Permite links adicionais
+  [key: string]: Link | undefined;
 }
 
 interface Meta {
@@ -25,13 +25,28 @@ interface Meta {
     page: number;
     limit: number;
   };
-  [key: string]: any; // Permite outros metadados adicionais
+  [key: string]: any;
 }
 
 interface FinalFormattedResponse<T> {
   data: T | T[];
-  _meta?: Meta; // _meta pode ser opcional se não houver metadados
-  [key: string]: any; // Permite outras propriedades no nível raiz, se necessário
+  _meta?: Meta;
+  [key: string]: any;
+}
+
+class ExpressServerAdapterHelpers {
+  static cleanObject(input: any) {
+    if (!input || typeof input !== "object") {
+      return input;
+    }
+    let cleaned = { ...input };
+    if ("__v" in cleaned) {
+      delete cleaned.__v;
+      return cleaned;
+    }
+
+    return cleaned;
+  }
 }
 
 export class ExpressServerAdapter implements HttpServer {
@@ -57,7 +72,7 @@ export class ExpressServerAdapter implements HttpServer {
         logger.info(
           `RESPONSE - [${new Date().toISOString()}] ${request.method} ${request.url} ${response.statusCode} ${response.statusMessage}`
         );
-        logger.info(`HEADERS - ${response.getHeaders()}`);
+        logger.info(`HEADERS`, response.getHeaders());
       });
       
       next();
@@ -93,39 +108,22 @@ export class ExpressServerAdapter implements HttpServer {
 
         response.json = function (body: any) {
           let finalResponse: FinalFormattedResponse<any>;
-          let dataToProcess: any;
-          let metaToProcess: Meta = {};
-
-          // Função auxiliar para remover '__v'
-          const cleanObject = (input: any) => {
-            if (!input || typeof input !== "object") {
-              return input; // Retorna o valor original se não for um objeto
-            }
-            let cleaned = { ...input };
-            if ("__v" in cleaned) {
-              delete cleaned.__v;
-              return cleaned;
-            }
-
-            return cleaned;
-          };
-          //
 
           if (Array.isArray(body)) {
             finalResponse = {
-              data: body.map(cleanObject),
+              data: body.map(ExpressServerAdapterHelpers.cleanObject),
             };
 
             return originalJson.call(this, finalResponse);
-          }
+          } 
           
           if (body.data && Array.isArray(body.data)) {
             finalResponse = {
-              data: body.data.map(cleanObject),
+              data: body.data.map(ExpressServerAdapterHelpers.cleanObject),
             }
           } else {
             finalResponse = {
-              data: cleanObject(body),
+              data: ExpressServerAdapterHelpers.cleanObject(body),
             }
           }
           
