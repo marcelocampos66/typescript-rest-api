@@ -24,7 +24,13 @@ export default (router: Router): void => {
   router.get('/users', [
     middlewareAdapter(authMiddleware),
     middlewareAdapter(requestValidatorMiddleware, getUsersRequestSchema),
-    routeAdapter(controller.listUsers),
+    routeAdapter(controller.listUsers, {
+      cache: {
+        maxAge: 60,
+        type: 'public',
+        revalidate: 'no-revalidate'
+      }
+    }),
   ]);
   router.get('/users/:userId', [
     middlewareAdapter(authMiddleware),

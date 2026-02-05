@@ -1,73 +1,68 @@
 import { Request, Response } from 'express';
+import crypto from 'node:crypto';
 import { HttpResponse, Controller } from '../../core/protocols';
 import contextStorage from '../../core/context/context-storage';
 import { AppTransactionHandler } from "../../infra/database/transaction-handler";
 import { ClientProviders } from '../../data/protocols/database';
 import { BadRequestError } from "../../core/errors";
 
+export type CacheOptions = {
+  maxAge: number;
+  type: 'public' | 'private';
+  noCacheType?: 'no-store' | 'no-cache' | 'both';
+  revalidate?: "must-revalidate" | "proxy-revalidate" | "no-revalidate";
+}
+
 type Options = {
   transactional?: boolean;
   clientProvider?: ClientProviders;
+  cache?: CacheOptions;
 }
 
-/*
-export function responseCached(
-  restData: { res: Response; body: any },
-  cacheData: {
-    maxAge: number; //seconds
-    type: "public" | "private";
-    noCacheType?: "no-store" | "no-cache" | "both";
-    revalidate: "must-revalidate" | "proxy-revalidate" | "no-revalidate";
-  }
-) {
-  const { res, body } = restData;
+function setCacheHeaders(response: Response, body: any, options: CacheOptions): boolean {
   const {
     maxAge,
     type,
-    revalidate = "no-revalidate",
-  } = cacheData;
+    revalidate = 'no-revalidate',
+  } = options;
 
-  const bodyJson = "toJson" in body ? body.toJson() : body;
-  //const bodyRaw = JSON.stringify(bodyJson);
+  const bodyRaw = typeof body === 'object' ? JSON.stringify(body) : body;
 
-  //   const hash = crypto.createHash("sha256").update(bodyRaw).digest("base64");
+  if (bodyRaw) {
+    const hash = crypto.createHash('sha256').update(bodyRaw).digest('base64');
 
-  //   if (res.req.headers["if-none-match"] === hash) {
-  //     console.log("ETag hit");
-  //     res.status(304).end(); // Not Modified
-  //     return;
-  //   }
+    if (response.req.headers['if-none-match'] === hash) {
+      response.status(304).end(); // Not Modified
+      return true;
+    }
 
-  //   res.setHeader("ETag", hash);
-
-  //const immutableFlag = immutable ? ", immutable" : "";
+    response.setHeader('ETag', hash);
+  }
 
   const revalidateFlag =
-    revalidate === "no-revalidate" ? "" : `, ${revalidate}`;
+    revalidate === 'no-revalidate' ? '' : `, ${revalidate}`;
 
-  let noCacheFlag = "";
+  let noCacheFlag = '';
 
-  switch (cacheData.noCacheType) {
-    case "no-store":
-      noCacheFlag = ", no-store";
+  switch (options.noCacheType) {
+    case 'no-store':
+      noCacheFlag = ', no-store';
       break;
-    case "no-cache":
-      noCacheFlag = ", no-cache";
+    case 'no-cache':
+      noCacheFlag = ', no-cache';
       break;
-    case "both":
-      noCacheFlag = ", no-store, no-cache";
+    case 'both':
+      noCacheFlag = ', no-store, no-cache';
       break;
   }
 
-  res.setHeader(
-    "Cache-Control",
+  response.setHeader(
+    'Cache-Control',
     `${type}, max-age=${maxAge}${revalidateFlag}${noCacheFlag}`
   );
 
-  //console.log("miss");
-  res.send(bodyJson);
+  return false;
 }
-*/
 
 export const routeAdapter = (controller: Controller, options?: Options) => {
   return async (request: Request, response: Response) => {
@@ -98,6 +93,11 @@ export const routeAdapter = (controller: Controller, options?: Options) => {
                 await transactionHandler.endTransaction();
               }
 
+              if (httpResponse.statusCode === 200 && options?.cache) {
+                const isCached = setCacheHeaders(response, httpResponse.body, options.cache);
+                if (isCached) return;
+              }
+
               response.status(httpResponse.statusCode).json(httpResponse.body);
             }
           );
@@ -113,6 +113,11 @@ export const routeAdapter = (controller: Controller, options?: Options) => {
       try {
         await contextStorage.store({ audit: { user: httpRequest.auth ? httpRequest.auth.id : null } }, async () => {
           httpResponse = await controller(httpRequest);
+
+          if (httpResponse.statusCode === 200 && options?.cache) {
+            const isCached = setCacheHeaders(response, httpResponse.body, options.cache);
+            if (isCached) return;
+          }
 
           response.status(httpResponse.statusCode).json(httpResponse.body);
         });
