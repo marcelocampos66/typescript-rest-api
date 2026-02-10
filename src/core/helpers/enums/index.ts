@@ -19,3 +19,11 @@ export enum MiddlewareIntanceTokens {
   AUTH = 'Auth',
   REQUEST_VALIDATOR = 'RequestValidator',
 }
+
+export enum BrokerInstanceTokens {
+  RABBITMQ_SERVER = 'RabbitMQServer',
+}
+
+export enum ConsumerInstanceTokens {
+  USER_CREATED_CONSUMER = 'UserCreatedConsumer',
+}

@@ -20,12 +20,12 @@ import contextStorage from '../../../../core/context/context-storage';
 export type MongoFilterQuery<T> = FilterQuery<T>;
 export type MongoPopulate = string | string[] | PopulateOptions | PopulateOptions[];
 export type MongoProjection<T> = ProjectionType<T>;
-export type MongoResult<T> = T & { _id: Types.ObjectId, createdAt: Date; updatedAt: Date };
+export type MongoResult<T> = T & { _id: Types.ObjectId, __v: number, createdAt: Date; updatedAt: Date };
 
 class MongoBaseRepositoryHelpers {
   static formatDocument<T>(document: MongoResult<T>): Result<T> {
     if (!document) return;
-    const { _id,...documentData } = document;
+    const { _id, __v, ...documentData } = document;
 
     return {
       ...documentData,
