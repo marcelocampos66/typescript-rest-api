@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { container } from 'tsyringe';
+import { container } from '../../../../../../core/dependency-injection';
 import { routeAdapter, middlewareAdapter } from '../../../../../../application/adapters';
 import { AuthController } from '../controllers';
 import { RequestValidatorMiddleware } from '../../../../../../core/middlewares';
-import { MiddlewareIntanceTokens } from '../../../../../../core/helpers/enums';
+import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../../../core/helpers/enums';
 import { authRequestSchema } from '../schemas';
 
-const controller: AuthController = container.resolve(AuthController);
-const requestValidatorMiddleware: RequestValidatorMiddleware = container.resolve(MiddlewareIntanceTokens.REQUEST_VALIDATOR);
+const controller: AuthController = container.getInstance(ContainerInstanceTokens.AUTH_CONTROLLER_V1);
+const requestValidatorMiddleware: RequestValidatorMiddleware = container.getInstance(MiddlewareIntanceTokens.REQUEST_VALIDATOR);
 
 export default (router: Router): void => {
   router.post('/auth', [

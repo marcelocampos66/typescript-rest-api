@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable } from '../../core/dependency-injection';
 import { HttpResponse, Middleware } from '../protocols';
 import { httpResponse, HttpStatusCode } from '../helpers/http';
 import { UnauthorizedError } from '../errors';

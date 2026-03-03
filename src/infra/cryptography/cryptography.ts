@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable } from '../../core/dependency-injection';
 import crypto from 'crypto';
 import { Crypto } from '../../data/protocols/cryptography';
 

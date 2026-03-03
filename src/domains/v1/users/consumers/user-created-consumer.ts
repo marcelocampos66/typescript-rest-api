@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from '../../../../core/dependency-injection';
 import { BrokerServer } from '../../../../data/protocols/broker-servers/broker-server';
 import { BrokerInstanceTokens } from '../../../../core/helpers/enums';
 import { Consumer, BrokerServerConfigEnum } from '../../../../data/protocols/broker-servers';

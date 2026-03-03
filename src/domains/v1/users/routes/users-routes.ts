@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { container } from 'tsyringe';
+import { container } from '../../../../core/dependency-injection';
 import { UserController } from '../controllers';
 import { routeAdapter, middlewareAdapter } from '../../../../application/adapters';
 import { AuthMiddleware, RequestValidatorMiddleware } from '../../../../core/middlewares';
@@ -7,9 +7,9 @@ import { getUserByIdRequestSchema, userRegisterRequestSchema, userUpdateRequestS
 import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../core/helpers/enums';
 import { ClientProviders } from "../../../../data/protocols/database";
 
-const controller: UserController = container.resolve(ContainerInstanceTokens.USER_CONTROLLER_V1);
-const authMiddleware: AuthMiddleware = container.resolve(MiddlewareIntanceTokens.AUTH);
-const requestValidatorMiddleware: RequestValidatorMiddleware = container.resolve(MiddlewareIntanceTokens.REQUEST_VALIDATOR);
+const controller: UserController = container.getInstance(ContainerInstanceTokens.USER_CONTROLLER_V1);
+const authMiddleware: AuthMiddleware = container.getInstance(MiddlewareIntanceTokens.AUTH);
+const requestValidatorMiddleware: RequestValidatorMiddleware = container.getInstance(MiddlewareIntanceTokens.REQUEST_VALIDATOR);
 
 export default (router: Router): void => {
   router.post('/users/sign-up', [

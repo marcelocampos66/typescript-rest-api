@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable } from '../../../../core/dependency-injection';
 import { User } from '../entities';
 import { UserModel } from '../../../../infra/database/mongodb/models';
 import { MongoRepository } from '../../../../infra/database/mongodb/repositories/mongo-repository';

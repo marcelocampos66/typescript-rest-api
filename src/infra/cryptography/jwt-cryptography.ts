@@ -1,4 +1,4 @@
-import { injectable } from 'tsyringe';
+import { injectable } from '../../core/dependency-injection';
 import jwt from  'jsonwebtoken';
 import { JWT_SECRET } from '../../application/config/env';
 import { JwtCrypto } from '../../data/protocols/cryptography';

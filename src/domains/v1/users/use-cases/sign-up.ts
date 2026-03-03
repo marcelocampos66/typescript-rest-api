@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from '../../../../core/dependency-injection';
 import { UseCase } from '../../../../core/protocols';
 import { User } from '../entities';
 import { UserService } from '../services';

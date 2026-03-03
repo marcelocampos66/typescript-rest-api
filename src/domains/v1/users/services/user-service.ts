@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from '../../../../core/dependency-injection';
 import { Cryptography } from '../../../../infra/cryptography';
 import { UserRepository } from '../repositories';
 import { User } from '../entities';

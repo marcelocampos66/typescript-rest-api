@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject } from '../../../../core/dependency-injection';
 import { Controller } from '../../../../core/base';
 import { UserService } from '../services';
 import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../../../../core/helpers/enums';

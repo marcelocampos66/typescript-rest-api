@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from '../../core/dependency-injection';
 import { httpResponse, HttpStatusCode } from '../helpers/http';
 import { JwtCryptography } from '../../infra/cryptography';
 import { CryptographyContainerInstanceTokens } from '../helpers/enums';
