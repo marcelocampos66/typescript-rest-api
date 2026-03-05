@@ -4,7 +4,7 @@ import { UserController } from '../controllers';
 import { routeAdapter, middlewareAdapter } from '../../../../application/adapters';
 import { AuthMiddleware, RequestValidatorMiddleware } from '../../../../core/middlewares';
 import { getUserByIdRequestSchema, userRegisterRequestSchema, userUpdateRequestSchema, getUsersRequestSchema } from '../schemas';
-import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../core/helpers/enums';
+import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../core/dependency-injection/tokens';
 import { ClientProviders } from "../../../../data/protocols/database";
 
 const controller: UserController = container.getInstance(ContainerInstanceTokens.USER_CONTROLLER_V1);

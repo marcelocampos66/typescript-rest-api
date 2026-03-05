@@ -1,7 +1,7 @@
 import { injectable, inject } from '../../../../core/dependency-injection';
 import { Controller } from '../../../../core/base';
 import { UserService } from '../services';
-import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../../../../core/helpers/enums';
+import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../../../../core/dependency-injection/tokens';
 import { HttpStatusCode } from '../../../../core/helpers/http';
 import { UsersErrorMessages } from '../helpers/enums';
 import { SignUp } from '../use-cases';

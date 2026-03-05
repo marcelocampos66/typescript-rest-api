@@ -1,6 +1,6 @@
 import { inject, injectable } from '../../../../core/dependency-injection';
 import { BrokerServer } from '../../../../data/protocols/broker-servers/broker-server';
-import { BrokerInstanceTokens } from '../../../../core/helpers/enums';
+import { BrokerInstanceTokens } from '../../../../core/dependency-injection/tokens';
 import { Consumer, BrokerServerConfigEnum } from '../../../../data/protocols/broker-servers';
 import { User } from '../entities';
 
@@ -18,6 +18,9 @@ export class UserCreatedConsumer implements Consumer {
   }
 
   async register(): Promise<void> {
-    await this.broker.consumeMessage(this.QUEUE_NAME, (message: any) => this.consume(JSON.parse(message.content)));
+    await this.broker.consumeMessage(
+      this.QUEUE_NAME,
+      (message: any) => this.consume(JSON.parse(message.content)),
+    );
   }
 }

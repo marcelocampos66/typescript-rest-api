@@ -1,6 +1,6 @@
 import { inject, injectable } from '../../../../../../core/dependency-injection';
 import { UserRepository } from '../../../repositories';
-import { ContainerInstanceTokens, CryptographyContainerInstanceTokens } from '../../../../../../core/helpers/enums';
+import { ContainerInstanceTokens, CryptographyContainerInstanceTokens } from '../../../../../../core/dependency-injection/tokens';
 import { User } from '../../../entities';
 import { Result } from '../../../../../../core/protocols/repository';
 import { Cryptography, JwtCryptography } from '../../../../../../infra/cryptography';

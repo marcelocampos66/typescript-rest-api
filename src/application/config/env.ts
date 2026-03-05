@@ -10,3 +10,5 @@ export const MONGO_DB_URL = (env.MONGO_DB_URL || 'mongodb://127.0.0.1:27017');
 export const MONGO_DB_POOL_SIZE = Number(env.MONGO_DB_POOL_SIZE || 10);
 export const DB_TIMEOUT= Number(env.DB_QUERY_TIMEOUT || 40000);
 export const RABBITMQ_URI = env.RABBITMQ_URI || 'amqp://guest:guest@localhost:5672';
+export const ENCRYPTION_KEY = (env.ENCRYPTION_KEY || '');
+export const IV_STRING = (env.IV_STRING || '');

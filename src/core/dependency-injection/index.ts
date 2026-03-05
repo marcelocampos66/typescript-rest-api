@@ -1,7 +1,6 @@
 import { DependencyContainer, container as tsyringeContainer, inject, injectable } from 'tsyringe';
 import { DependencyInjection } from '../protocols/dependency-injection';
 
-
 class DependencyInjectionContainer implements DependencyInjection {
   private readonly dependencyContainer: DependencyContainer = tsyringeContainer;
 

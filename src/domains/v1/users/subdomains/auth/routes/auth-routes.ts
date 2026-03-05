@@ -3,7 +3,7 @@ import { container } from '../../../../../../core/dependency-injection';
 import { routeAdapter, middlewareAdapter } from '../../../../../../application/adapters';
 import { AuthController } from '../controllers';
 import { RequestValidatorMiddleware } from '../../../../../../core/middlewares';
-import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../../../core/helpers/enums';
+import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../../../core/dependency-injection/tokens';
 import { authRequestSchema } from '../schemas';
 
 const controller: AuthController = container.getInstance(ContainerInstanceTokens.AUTH_CONTROLLER_V1);

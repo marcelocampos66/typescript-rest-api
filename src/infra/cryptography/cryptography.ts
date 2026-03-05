@@ -1,9 +1,7 @@
 import { injectable } from '../../core/dependency-injection';
 import crypto from 'crypto';
 import { Crypto } from '../../data/protocols/cryptography';
-
-const ENCRYPTION_KEY = 'c6ca39bbc348aeb914d789e5c61f14cd';
-const IV_STRING = 'devinitialvector';
+import { ENCRYPTION_KEY, IV_STRING } from '../../application/config/env';
 
 @injectable()
 export class Cryptography implements Crypto {

@@ -3,7 +3,10 @@ import { inject, injectable } from '../../../../core/dependency-injection';
 import { Cryptography } from '../../../../infra/cryptography';
 import { UserRepository } from '../repositories';
 import { User } from '../entities';
-import { ContainerInstanceTokens, CryptographyContainerInstanceTokens } from '../../../../core/helpers/enums';
+import {
+  ContainerInstanceTokens,
+  CryptographyContainerInstanceTokens,
+} from '../../../../core/dependency-injection/tokens';
 import { Service } from '../../../../core/base';
 import { ConflictError } from '../../../../core/errors';
 import { UsersErrorMessages } from '../helpers/enums';

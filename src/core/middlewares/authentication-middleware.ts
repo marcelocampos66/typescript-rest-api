@@ -1,7 +1,7 @@
 import { inject, injectable } from '../../core/dependency-injection';
 import { httpResponse, HttpStatusCode } from '../helpers/http';
 import { JwtCryptography } from '../../infra/cryptography';
-import { CryptographyContainerInstanceTokens } from '../helpers/enums';
+import { CryptographyContainerInstanceTokens } from '../dependency-injection/tokens';
 import { HttpResponse, Middleware } from '../protocols';
 import { UnauthorizedError } from '../errors';
 

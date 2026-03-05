@@ -1,5 +1,5 @@
 import { container } from '..';
-import { MiddlewareIntanceTokens } from '../../helpers/enums';
+import { MiddlewareIntanceTokens } from '../tokens';
 import { AuthMiddleware } from '../../middlewares/authentication-middleware';
 import { RequestValidatorMiddleware } from '../../middlewares/request-validator-middleware';
 

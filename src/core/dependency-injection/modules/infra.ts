@@ -1,5 +1,5 @@
 import { container } from '..';
-import { BrokerInstanceTokens, ConsumerInstanceTokens, CryptographyContainerInstanceTokens } from '../../helpers/enums';
+import { BrokerInstanceTokens, ConsumerInstanceTokens, CryptographyContainerInstanceTokens } from '../tokens';
 import { Cryptography, JwtCryptography } from '../../../infra/cryptography';
 import { BrokerServer } from '../../../data/protocols/broker-servers';
 import { RabbitMQServer } from '../../../infra/broker-servers/rabbitmq-server';

@@ -2,7 +2,11 @@ import { inject, injectable } from '../../../../core/dependency-injection';
 import { UseCase } from '../../../../core/protocols';
 import { User } from '../entities';
 import { UserService } from '../services';
-import { ContainerInstanceTokens, CryptographyContainerInstanceTokens, BrokerInstanceTokens } from '../../../../core/helpers/enums';
+import {
+  ContainerInstanceTokens,
+  CryptographyContainerInstanceTokens,
+  BrokerInstanceTokens,
+} from '../../../../core/dependency-injection/tokens';
 import { ConflictError } from '../../../../core/errors';
 import { UsersErrorMessages } from '../helpers/enums';
 import { Cryptography } from '../../../../infra/cryptography';

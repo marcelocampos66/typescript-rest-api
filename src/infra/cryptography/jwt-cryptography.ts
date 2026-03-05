@@ -1,5 +1,5 @@
-import { injectable } from '../../core/dependency-injection';
 import jwt from  'jsonwebtoken';
+import { injectable } from '../../core/dependency-injection';
 import { JWT_SECRET } from '../../application/config/env';
 import { JwtCrypto } from '../../data/protocols/cryptography';
 

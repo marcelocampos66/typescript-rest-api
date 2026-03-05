@@ -1,7 +1,7 @@
 import { injectable, inject } from '../../../../../../core/dependency-injection';
 import { Controller } from '../../../../../../core/base';
 import { AuthService } from '../services';
-import { ContainerInstanceTokens } from '../../../../../../core/helpers/enums';
+import { ContainerInstanceTokens } from '../../../../../../core/dependency-injection/tokens';
 import { HttpStatusCode } from '../../../../../../core/helpers/http';
 import { AuthErrorMessages } from '../helpers/enums';
 

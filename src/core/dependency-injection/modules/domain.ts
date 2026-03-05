@@ -1,5 +1,5 @@
 import { container } from '..';
-import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../../helpers/enums';
+import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../tokens';
 import { UserController } from '../../../domains/v1/users/controllers';
 import { UserRepository } from '../../../domains/v1/users/repositories';
 import { UserService } from '../../../domains/v1/users/services/user-service';

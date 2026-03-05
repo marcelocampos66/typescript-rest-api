@@ -5,9 +5,3 @@ export interface DependencyInjection {
 
   getInstance<T>(dependencyToken: string): T;
 }
-
-// type Constructor<T> = new (...args: any[]) => T;
-
-// type InjectableDecorator = <T>(target: Constructor<T>) => void | Function;
-
-// type InjectDecorator = <T>(target: Constructor<T>) => void | Function;
