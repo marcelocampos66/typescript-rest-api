@@ -5,4 +5,4 @@ export * from './use-case';
 export * from './entity';
 export * from './middleware';
 export * from './http-server';
-export * from './request-validator';
+export * from './validator';

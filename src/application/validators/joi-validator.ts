@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { Validator, ValidationResult } from '../../core/protocols/request-validator';
+import { Validator, ValidationResult } from '../../core/protocols/validator';
 
 export class JoiValidator implements Validator {
   constructor(private readonly schema: joi.ObjectSchema) {}

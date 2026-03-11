@@ -1,5 +1,5 @@
 import { ZodObject, ZodRawShape } from 'zod';
-import { Validator, ValidationResult } from '../../core/protocols/request-validator';
+import { Validator, ValidationResult } from '../../core/protocols/validator';
 
 export class ZodValidator<T extends ZodRawShape> implements Validator {
   constructor(private readonly schema: ZodObject<T>) {}
