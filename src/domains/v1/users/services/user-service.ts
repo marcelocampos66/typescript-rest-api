@@ -10,6 +10,7 @@ import {
 import { Service } from '../../../../core/base';
 import { ConflictError } from '../../../../core/errors';
 import { UsersErrorMessages } from '../helpers/enums';
+import { userDTO, userUpdateDTO } from '../DTOs';
 
 @injectable()
 export class UserService extends Service<User> {
@@ -33,7 +34,7 @@ export class UserService extends Service<User> {
     }
 
     const hashedPassword = await this.crypto.encrypt(password);
-    const newUserData = { email, name, password: hashedPassword };
+    const newUserData = userDTO({ email, name, password: hashedPassword });
 
     return this.repository.create(newUserData);
   }
@@ -41,7 +42,7 @@ export class UserService extends Service<User> {
   public async updateProfile(userId: string, newUserData: Partial<User>) {
     const { password, email, ...rest } = newUserData;
     const hashedPassword = await this.crypto.encrypt(password);
-    const updateUserData = { ...rest, password: hashedPassword };
+    const updateUserData = userUpdateDTO({ ...rest, password: hashedPassword });
 
     await this.repository.update(userId, updateUserData);
   }
