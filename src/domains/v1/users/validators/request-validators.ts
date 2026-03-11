@@ -1,39 +1,39 @@
-import joi from 'joi';
-import { JoiValidator } from '../../../../application/validators/joi-validator';
+import { z } from 'zod';
+import { ZodValidator } from '../../../../application/validators/zod-validator';
 
-export const getUsersRequestValidator = new JoiValidator(
-  joi.object({
-    query: joi.object({
-      page: joi.number().required(),
-      size: joi.number().required(),
+export const getUsersRequestValidator = new ZodValidator(
+  z.object({
+    query: z.object({
+      page: z.number(),
+      size: z.number(),
     })
   })
 );
 
-export const getUserByIdRequestValidator = new JoiValidator(
-  joi.object({
-    params: joi.object({
-      userId: joi.string().length(24).required(),
+export const getUserByIdRequestValidator = new ZodValidator(
+  z.object({
+    params: z.object({
+      userId: z.string().length(24),
     })
   })
 );
 
-export const userRegisterRequestValidator = new JoiValidator(
-  joi.object({
-    body: joi.object({
-      name: joi.string().min(3).required(),
-      email: joi.string().email().required(),
-      password: joi.string().min(6).required(),
+export const userRegisterRequestValidator = new ZodValidator(
+  z.object({
+    body: z.object({
+      name: z.string().min(3),
+      email: z.string().email(),
+      password: z.string().min(6),
     })
   })
 );
 
-export const userUpdateRequestValidator = new JoiValidator(
-  joi.object({
-    body: joi.object({
-      name: joi.string().min(3),
-      email: joi.string().email(),
-      password: joi.string().min(6),
+export const userUpdateRequestValidator = new ZodValidator(
+  z.object({
+    body: z.object({
+      name: z.string().min(3).optional(),
+      email: z.string().email().optional(),
+      password: z.string().min(6).optional(),
     })
   })
 );
