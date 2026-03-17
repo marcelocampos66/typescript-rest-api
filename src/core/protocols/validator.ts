@@ -1,8 +1,9 @@
-export interface ValidationResult {
+export interface ValidationResult<T = unknown> {
   isValid: boolean;
+  data?: T;
   errorMessage?: string;
 }
 
-export interface Validator {
-  validate(data: unknown): ValidationResult;
+export interface Validator<T = unknown> {
+  validate(data: unknown): ValidationResult<T>;
 }
