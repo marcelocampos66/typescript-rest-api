@@ -4,8 +4,8 @@ import { ZodValidator } from '../../../../application/validators/zod-validator';
 export const getUsersRequestValidator = new ZodValidator(
   z.object({
     query: z.object({
-      page: z.number(),
-      size: z.number(),
+      page: z.coerce.number(),
+      size: z.coerce.number(),
     })
   })
 );

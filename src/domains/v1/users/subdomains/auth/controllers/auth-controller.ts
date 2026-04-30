@@ -1,4 +1,5 @@
 import { injectable, inject } from '../../../../../../core/dependency-injection';
+import { bind } from '../../../../../../core/decorators';
 import { Controller } from '../../../../../../core/base';
 import { AuthService } from '../services';
 import { ContainerInstanceTokens } from '../../../../../../core/dependency-injection/tokens';
@@ -14,9 +15,9 @@ export class AuthController extends Controller {
   ) {
     super();
     this.authService = authService;
-    this.auth = this.auth.bind(this);
   }
 
+  @bind
   public async auth(request: AuthController.AuthRequest) {
     try {
       const { email, password } = request;

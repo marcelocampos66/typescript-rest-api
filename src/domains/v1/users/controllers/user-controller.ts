@@ -1,4 +1,5 @@
 import { injectable, inject } from '../../../../core/dependency-injection';
+import { bind } from '../../../../core/decorators';
 import { Controller } from '../../../../core/base';
 import { UserService } from '../services';
 import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../../../../core/dependency-injection/tokens';
@@ -18,13 +19,9 @@ export class UserController extends Controller {
     super();
     this.userService = userService;
     this.singUp = singUp;
-    this.signup = this.signup.bind(this);
-    this.createUser = this.createUser.bind(this);
-    this.findUserById = this.findUserById.bind(this);
-    this.listUsers = this.listUsers.bind(this);
-    this.updateProfile = this.updateProfile.bind(this);
   }
 
+  @bind
   public async signup(request: UserController.CreateUserRequest) {
     try {
       const user = await this.singUp.execute(request);
@@ -35,6 +32,7 @@ export class UserController extends Controller {
     }
   }
 
+  @bind
   public async createUser(request: UserController.CreateUserRequest) {
     try {
       const { name, email, password }  = request;
@@ -46,6 +44,7 @@ export class UserController extends Controller {
     }
   }
 
+  @bind
   public async listUsers(request: { page: number; size: number }) {
     try {
       const users = await this.userService.paginate({
@@ -59,6 +58,7 @@ export class UserController extends Controller {
     }
   }
  
+  @bind
   public async findUserById(request: UserController.FindUserByIdRequest) {
     try {
       const { userId } = request;
@@ -73,6 +73,7 @@ export class UserController extends Controller {
     }
   }
   
+  @bind
   public async updateProfile(request: UserController.UpdateUserRequest) {
     try {
       const { auth, name, email, password } = request;
