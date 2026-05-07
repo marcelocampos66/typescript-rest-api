@@ -7,25 +7,23 @@ services:
       - ..:/home/node/app:cached
     command: sleep infinity
     ports:
-      - "${PORT}:${PORT}"
+      - "8080:8080"
     depends_on:
       rabbitmq:
         condition: service_healthy
     env_file:
       - ../.env
     environment:
-      - RABBITMQ_URI=${RABBITMQ_URI}
+      - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672
 
   rabbitmq:
     image: rabbitmq:4-management-alpine
     ports:
       - "5672:5672"
       - "15672:15672"
-    env_file:
-      - ../.env
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
