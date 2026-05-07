@@ -23,8 +23,8 @@ export abstract class BrokerServer {
 }
 
 export enum BrokerServerConfigEnum {
-  EXCHANGE_NAME = 'users',
-  EXCHANGE_TYPE_DIRECT = 'direct',
+  USERS_EXCHANGE_NAME = 'users',
+  USERS_EXCHANGE_TYPE = 'direct',
   ROUTING_KEY_USER_CREATED = 'user-created',
   ROUTING_KEY_USER_UPDATED = 'user-updated',
   ROUTING_KEY_USER_DELETED = 'user-deleted',

@@ -70,11 +70,11 @@ export class RabbitMQServer implements BrokerServer {
 
   public async setupQueues(): Promise<void> {
     try {
-      await this.createExchange(BrokerServerConfigEnum.EXCHANGE_NAME, BrokerServerConfigEnum.EXCHANGE_TYPE_DIRECT);
+      await this.createExchange(BrokerServerConfigEnum.USERS_EXCHANGE_NAME, BrokerServerConfigEnum.USERS_EXCHANGE_TYPE);
       await this.createQueue(BrokerServerConfigEnum.QUEUE_USER_CREATED);
       await this.bindQueue(
         BrokerServerConfigEnum.QUEUE_USER_CREATED,
-        BrokerServerConfigEnum.EXCHANGE_NAME,
+        BrokerServerConfigEnum.USERS_EXCHANGE_NAME,
         BrokerServerConfigEnum.ROUTING_KEY_USER_CREATED,
       );
     } catch (error) {

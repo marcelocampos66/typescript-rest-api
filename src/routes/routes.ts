@@ -11,7 +11,8 @@ const deepReadDir = async (dirPath: string) => await Promise.all(
 
 export default async (app: Express): Promise<void> => {
   const router = Router();
-  (await deepReadDir(join(__dirname, '../domains'))).flat(Number.POSITIVE_INFINITY).map(async (file: string) => {
+  const files = (await deepReadDir(join(__dirname, '../domains'))).flat(Number.POSITIVE_INFINITY);
+  await Promise.all(files.map(async (file: string) => {
     const filePath = file.split('/');
     const domainIndex = filePath.findIndex((folder) => folder === 'domains');
     const version = filePath[domainIndex + 1]
@@ -21,5 +22,5 @@ export default async (app: Express): Promise<void> => {
     if (file.includes('routes') && !file.endsWith('.map')) {
       (await import(file)).default(router);
     }
-  })
+  }))
 }

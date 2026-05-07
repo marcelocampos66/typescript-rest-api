@@ -29,8 +29,9 @@ import { UserCreatedConsumer } from '../domains/v1/users/consumers/user-created-
     await rabbitMQServer.setupConsumers([userCreatedConsumer]);
 
     const server = new ExpressServerAdapter();
-    server.setupRoutes(expressConfigRoutes);
+    await server.setupRoutes(expressConfigRoutes);
     server.setupMiddlewares([ContentTypeMiddleware]);
+    server.setupErrorHandlers();
     server.startServer(PORT);
   } catch (error) {
     logger.error('Error on server init', { error });

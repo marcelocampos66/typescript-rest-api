@@ -55,7 +55,6 @@ export class ExpressServerAdapter implements HttpServer {
   constructor() {
     this.setupDefaultAppMiddlewares();
     this.setupResource();
-    this.setupErrorHandlers();
   }
 
   private setupDefaultAppMiddlewares() {
@@ -86,14 +85,14 @@ export class ExpressServerAdapter implements HttpServer {
     }
   }
 
-  public setupRoutes(setupMethod: Function) {
+  public async setupRoutes(setupMethod: Function) {
     this.server.get("/", (_request: Request, response: Response) => {
       return response.status(200).json({ message: "Server online!" });
     });
-    void setupMethod(this.server);
+    await setupMethod(this.server);
   }
 
-  private setupErrorHandlers() {
+  public setupErrorHandlers() {
     this.server.use(errorMiddleware);
   }
 
