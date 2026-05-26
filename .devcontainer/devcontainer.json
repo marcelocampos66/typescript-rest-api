@@ -16,11 +16,12 @@
 	},
 
 	// Forward RabbitMQ Management UI port for local access
-	"forwardPorts": [8080, 5672, 15672],
+	"forwardPorts": [8080, 5672, 15672, 27017],
 	"portsAttributes": {
 		"8080": { "label": "API" },
 		"5672": { "label": "RabbitMQ" },
-		"15672": { "label": "RabbitMQ Management" }
+		"15672": { "label": "RabbitMQ Management" },
+		"27017": { "label": "MongoDB" }
 	}
 
 	// Uncomment the next line to run commands after the container is created.

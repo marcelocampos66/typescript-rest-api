@@ -103,9 +103,13 @@ export class ExpressServerAdapter implements HttpServer {
   private setupResource() {
     this.server.use(
       (request: Request, response: Response, next: NextFunction) => {
-        const originalJson = response.json;
+        const originalMethod = response.json;
 
         response.json = function (body: any) {
+          if (!body) {
+            return originalMethod.call(this, body);
+          }
+
           let finalResponse: FinalFormattedResponse<any>;
 
           if (Array.isArray(body)) {
@@ -113,7 +117,7 @@ export class ExpressServerAdapter implements HttpServer {
               data: body.map(ExpressServerAdapterHelpers.cleanObject),
             };
 
-            return originalJson.call(this, finalResponse);
+            return originalMethod.call(this, finalResponse);
           } 
           
           if (body.data && Array.isArray(body.data)) {
@@ -125,7 +129,7 @@ export class ExpressServerAdapter implements HttpServer {
               data: ExpressServerAdapterHelpers.cleanObject(body),
             }
           }
-          
+
           if ("_meta" in body) {
             finalResponse._meta = {
               ...body._meta,
@@ -145,7 +149,7 @@ export class ExpressServerAdapter implements HttpServer {
             };
           }
 
-          return originalJson.call(this, finalResponse);
+          return originalMethod.call(this, finalResponse);
         };
 
         next();

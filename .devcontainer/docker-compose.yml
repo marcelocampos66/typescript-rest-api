@@ -11,10 +11,13 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      mongo:
+        condition: service_healthy
     env_file:
       - ../.env
     environment:
       - RABBITMQ_URI=amqp://guest:guest@rabbitmq:5672
+      - MONGO_DB_URL=mongodb://mongo:27017
 
   rabbitmq:
     image: rabbitmq:4-management-alpine
@@ -32,5 +35,18 @@ services:
       timeout: 5s
       retries: 5
 
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   rabbitmq_data:
+  mongo_data:
