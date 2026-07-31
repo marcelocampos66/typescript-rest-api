@@ -1,4 +1,4 @@
-import { AsyncLocalStorage } from 'async_hooks';
+import { AsyncLocalStorage } from 'node:async_hooks';
 
 class ContextStorage<T = unknown> {
   private readonly storage: AsyncLocalStorage<T> = new AsyncLocalStorage();

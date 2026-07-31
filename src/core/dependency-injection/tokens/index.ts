@@ -15,7 +15,7 @@ export enum UseCasesInstanceTokens {
   SIGN_UP = 'SignUp',
 }
 
-export enum MiddlewareIntanceTokens {
+export enum MiddlewareInstanceTokens {
   AUTH = 'Auth',
   REQUEST_VALIDATOR = 'RequestValidator',
 }
@@ -26,4 +26,12 @@ export enum BrokerInstanceTokens {
 
 export enum ConsumerInstanceTokens {
   USER_CREATED_CONSUMER = 'UserCreatedConsumer',
+}
+
+export enum HttpClientInstanceTokens {
+  AXIOS_HTTP_CLIENT = 'AxiosHttpClient',
+}
+
+export enum ExternalServiceInstanceTokens {
+  VIA_CEP_ADDRESS_LOOKUP_SERVICE = 'ViaCepAddressLookupService',
 }

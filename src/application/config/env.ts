@@ -12,3 +12,5 @@ export const DB_TIMEOUT= Number(env.DB_QUERY_TIMEOUT || 40000);
 export const RABBITMQ_URI = env.RABBITMQ_URI || 'amqp://guest:guest@localhost:5672';
 export const ENCRYPTION_KEY = (env.ENCRYPTION_KEY || '');
 export const IV_STRING = (env.IV_STRING || '');
+export const HTTP_CLIENT_TIMEOUT = Number(env.HTTP_CLIENT_TIMEOUT || 10000);
+export const VIA_CEP_BASE_URL = env.VIA_CEP_BASE_URL || '';

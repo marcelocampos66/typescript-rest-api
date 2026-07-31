@@ -5,4 +5,11 @@ export const userSchema = new DefaultSchema<User>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  address: {
+    street: String,
+    number: String,
+    district: String,
+    city: String,
+    zipcode : String,
+  }
 });

@@ -1,15 +1,14 @@
 import { container } from '..';
-import { MiddlewareIntanceTokens } from '../tokens';
-import { AuthMiddleware } from '../../middlewares/authentication-middleware';
-import { RequestValidatorMiddleware } from '../../middlewares/request-validator-middleware';
+import { MiddlewareInstanceTokens } from '../tokens';
+import { AuthMiddleware, RequestValidatorMiddleware } from '../../middlewares';
 
 export const registerCoreModule = () => {
   container.register<AuthMiddleware>(
-    MiddlewareIntanceTokens.AUTH,
+    MiddlewareInstanceTokens.AUTH,
     AuthMiddleware
   );
   container.register<RequestValidatorMiddleware>(
-    MiddlewareIntanceTokens.REQUEST_VALIDATOR,
+    MiddlewareInstanceTokens.REQUEST_VALIDATOR,
     RequestValidatorMiddleware
   );
 };

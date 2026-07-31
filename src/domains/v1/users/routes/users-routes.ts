@@ -9,12 +9,12 @@ import {
   userUpdateRequestValidator,
   getUsersRequestValidator
 } from '../validators';
-import { ContainerInstanceTokens, MiddlewareIntanceTokens } from '../../../../core/dependency-injection/tokens';
+import { ContainerInstanceTokens, MiddlewareInstanceTokens } from '../../../../core/dependency-injection/tokens';
 import { ClientProviders } from "../../../../data/protocols/database";
 
 const controller: UserController = container.getInstance(ContainerInstanceTokens.USER_CONTROLLER_V1);
-const authMiddleware: AuthMiddleware = container.getInstance(MiddlewareIntanceTokens.AUTH);
-const requestValidatorMiddleware: RequestValidatorMiddleware = container.getInstance(MiddlewareIntanceTokens.REQUEST_VALIDATOR);
+const authMiddleware: AuthMiddleware = container.getInstance(MiddlewareInstanceTokens.AUTH);
+const requestValidatorMiddleware: RequestValidatorMiddleware = container.getInstance(MiddlewareInstanceTokens.REQUEST_VALIDATOR);
 
 export default (router: Router): void => {
   router.post('/users/sign-up', [

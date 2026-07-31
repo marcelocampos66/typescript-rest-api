@@ -2,7 +2,7 @@ import { container } from '..';
 import { ContainerInstanceTokens, UseCasesInstanceTokens } from '../tokens';
 import { UserController } from '../../../domains/v1/users/controllers';
 import { UserRepository } from '../../../domains/v1/users/repositories';
-import { UserService } from '../../../domains/v1/users/services/user-service';
+import { UserService } from '../../../domains/v1/users/services';
 import { SignUp } from '../../../domains/v1/users/use-cases';
 import { AuthController } from '../../../domains/v1/users/subdomains/auth/controllers';
 import { AuthService } from '../../../domains/v1/users/subdomains/auth/services';
