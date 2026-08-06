@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ZodValidator } from '../../../../application/validators/zod-validator';
+import { ZodValidator } from '../../../../application/validators';
 
 export const getUsersRequestValidator = new ZodValidator(
   z.object({

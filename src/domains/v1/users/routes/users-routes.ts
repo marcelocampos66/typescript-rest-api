@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from '../../../../core/protocols';
 import { container } from '../../../../core/dependency-injection';
 import { UserController } from '../controllers';
 import { routeAdapter, middlewareAdapter } from '../../../../application/adapters';
