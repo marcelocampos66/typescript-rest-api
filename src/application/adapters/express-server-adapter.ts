@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from "cors";
 import logger from '../config/logger';
 import { errorMiddleware } from '../../core/middlewares';
-import { middlewareAdapter } from '../adapters';
+import { expressMiddlewareAdapter } from '../adapters';
 import { HttpServer, Middleware } from '../../core/protocols';
 
 interface Link {
@@ -81,7 +81,7 @@ export class ExpressServerAdapter implements HttpServer {
   public setupMiddlewares(Middlewares: (new () => Middleware)[]) {
     for (const AppMiddleware of Middlewares) {
       const middleware = new AppMiddleware();
-      this.server.use(middlewareAdapter(middleware));
+      this.server.use(expressMiddlewareAdapter(middleware));
     }
   }
 

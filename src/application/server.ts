@@ -6,7 +6,7 @@ import MongoClientProvider from '../infra/database/mongodb/mongo-client-provider
 import { ExpressServerAdapter } from './adapters';
 import expressConfigRoutes from '../routes/routes'
 import { ContentTypeMiddleware } from '../core/middlewares';
-import { PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE, RABBITMQ_URI } from './config/env';
+import { APP_NAME, PORT, MONGO_DB_NAME, MONGO_DB_POOL_SIZE, RABBITMQ_URI } from './config/env';
 import { BrokerInstanceTokens, ConsumerInstanceTokens } from '../core/dependency-injection/tokens';
 import { BrokerServer } from '../data/protocols/broker-servers/broker-server';
 import { UserCreatedConsumer } from '../domains/v1/users/consumers/user-created-consumer';
@@ -19,7 +19,7 @@ import { UserCreatedConsumer } from '../domains/v1/users/consumers/user-created-
 
     await MongoClientProvider.connect({
       dbName: MONGO_DB_NAME,
-      appName: 'rest-api',
+      appName: APP_NAME,
       maxPoolSize: MONGO_DB_POOL_SIZE,
     });
 

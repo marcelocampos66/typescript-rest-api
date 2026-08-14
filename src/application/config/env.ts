@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 const env = process.env;
 
+export const APP_NAME = env.APP_NAME || 'rest-api'
 export const PORT = Number(env.PORT || 8080);
 export const APP_ENV = env.APP_ENV || 'dev';
 export const JWT_SECRET = (env.JWT_SECRET || '');

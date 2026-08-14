@@ -1,7 +1,10 @@
 import { Express, Router as ExpressRouter } from 'express';
-import { readdir } from 'fs/promises';
-import { join } from 'path';
+import { readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+import { APP_NAME } from '../application/config/env';
 import { ExpressRouterAdapter } from '../application/adapters';
+import { container } from '../core/dependency-injection';
+import { Routes } from '../core/base';
 
 const deepReadDir = async (dirPath: string) => await Promise.all(
   (await readdir(dirPath, { withFileTypes: true })).map(async (dirent) => {
@@ -19,10 +22,12 @@ export default async (app: Express): Promise<void> => {
     const domainIndex = filePath.findIndex((folder) => folder === 'domains');
     const version = filePath[domainIndex + 1]
 
-    app.use(`/rest-api/${version}`, expressRouter);
+    app.use(`/${APP_NAME}/${version}`, expressRouter);
 
     if (file.includes('routes') && !file.endsWith('.map')) {
-      (await import(file)).default(router);
+      const RoutesClass = (await import(file)).default;
+
+      container.getInstance<Routes>(RoutesClass).register(router);
     }
   }))
 }

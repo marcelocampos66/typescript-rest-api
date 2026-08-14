@@ -64,7 +64,7 @@ function setCacheHeaders(response: Response, body: any, options: CacheOptions): 
   return false;
 }
 
-export const routeAdapter = (controller: Controller, options?: Options) => {
+export const expressRouteAdapter = (controller: Controller, options?: Options) => {
   return async (request: Request, response: Response) => {
     const httpRequest = {
       auth: request.auth ? request.auth : {},

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { HttpResponse, Middleware } from '../../core/protocols';
 import { HttpStatusCode } from '../../core/helpers/http';
 
-export const middlewareAdapter = (middleware: Middleware, ...args: unknown[]) => {
+export const expressMiddlewareAdapter = (middleware: Middleware, ...args: unknown[]) => {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
       const httpRequest = {

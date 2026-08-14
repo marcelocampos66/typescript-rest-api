@@ -1,17 +1,29 @@
-import { Router } from '../../../../../../core/protocols';
-import { container } from '../../../../../../core/dependency-injection';
-import { routeAdapter, middlewareAdapter } from '../../../../../../application/adapters';
+import { RouteHandler } from '../../../../../../core/protocols';
+import { injectable, inject } from '../../../../../../core/dependency-injection';
+import { expressRouteAdapter, expressMiddlewareAdapter } from '../../../../../../application/adapters';
 import { AuthController } from '../controllers';
 import { RequestValidatorMiddleware } from '../../../../../../core/middlewares';
+import { Routes } from '../../../../../../core/base';
+import { Post } from '../../../../../../core/decorators';
 import { ContainerInstanceTokens, MiddlewareInstanceTokens } from '../../../../../../core/dependency-injection/tokens';
 import { authRequestValidator } from '../validators';
 
-const controller: AuthController = container.getInstance(ContainerInstanceTokens.AUTH_CONTROLLER_V1);
-const requestValidatorMiddleware: RequestValidatorMiddleware = container.getInstance(MiddlewareInstanceTokens.REQUEST_VALIDATOR);
+@injectable()
+export class AuthRoutes extends Routes {
+  constructor(
+    @inject(ContainerInstanceTokens.AUTH_CONTROLLER_V1) private readonly controller: AuthController,
+    @inject(MiddlewareInstanceTokens.REQUEST_VALIDATOR) private readonly requestValidatorMiddleware: RequestValidatorMiddleware,
+  ) {
+    super();
+  }
 
-export default (router: Router): void => {
-  router.post('/auth', [
-    middlewareAdapter(requestValidatorMiddleware, authRequestValidator),
-    routeAdapter(controller.auth),
-  ]);
+  @Post('/auth')
+  public auth(): RouteHandler[] {
+    return [
+      expressMiddlewareAdapter(this.requestValidatorMiddleware, authRequestValidator),
+      expressRouteAdapter(this.controller.auth),
+    ];
+  }
 }
+
+export default AuthRoutes;

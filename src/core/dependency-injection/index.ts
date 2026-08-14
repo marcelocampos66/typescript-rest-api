@@ -12,7 +12,7 @@ class DependencyInjectionContainer implements DependencyInjection {
     this.dependencyContainer.registerSingleton<T>(dependencyToken, dependency);
   }
 
-  public getInstance<T>(dependencyToken: string): T {
+  public getInstance<T>(dependencyToken: string | (new (...args: any[]) => T)): T {
     return this.dependencyContainer.resolve(dependencyToken);
   }
 }

@@ -3,5 +3,5 @@ export interface DependencyInjection {
 
   registerSingleton(dependencyToken: string, dependency: any): void;
 
-  getInstance<T>(dependencyToken: string): T;
+  getInstance<T>(dependencyToken: string | (new (...args: any[]) => T)): T;
 }

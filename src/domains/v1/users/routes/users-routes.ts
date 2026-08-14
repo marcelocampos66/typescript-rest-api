@@ -1,8 +1,10 @@
-import { Router } from '../../../../core/protocols';
-import { container } from '../../../../core/dependency-injection';
+import { RouteHandler } from '../../../../core/protocols';
+import { injectable, inject } from '../../../../core/dependency-injection';
 import { UserController } from '../controllers';
-import { routeAdapter, middlewareAdapter } from '../../../../application/adapters';
+import { expressRouteAdapter, expressMiddlewareAdapter } from '../../../../application/adapters';
 import { AuthMiddleware, RequestValidatorMiddleware } from '../../../../core/middlewares';
+import { Routes } from '../../../../core/base';
+import { Get, Post, Put } from '../../../../core/decorators';
 import {
   getUserByIdRequestValidator,
   userRegisterRequestValidator,
@@ -12,39 +14,65 @@ import {
 import { ContainerInstanceTokens, MiddlewareInstanceTokens } from '../../../../core/dependency-injection/tokens';
 import { ClientProviders } from "../../../../data/protocols/database";
 
-const controller: UserController = container.getInstance(ContainerInstanceTokens.USER_CONTROLLER_V1);
-const authMiddleware: AuthMiddleware = container.getInstance(MiddlewareInstanceTokens.AUTH);
-const requestValidatorMiddleware: RequestValidatorMiddleware = container.getInstance(MiddlewareInstanceTokens.REQUEST_VALIDATOR);
+@injectable()
+export class UsersRoutes extends Routes {
+  constructor(
+    @inject(ContainerInstanceTokens.USER_CONTROLLER_V1) private readonly controller: UserController,
+    @inject(MiddlewareInstanceTokens.AUTH) private readonly authMiddleware: AuthMiddleware,
+    @inject(MiddlewareInstanceTokens.REQUEST_VALIDATOR) private readonly requestValidatorMiddleware: RequestValidatorMiddleware,
+  ) {
+    super();
+  }
 
-export default (router: Router): void => {
-  router.post('/users/sign-up', [
-    middlewareAdapter(requestValidatorMiddleware, userRegisterRequestValidator),
-    routeAdapter(controller.signup),
-  ]);
-  router.post('/users', [
-    middlewareAdapter(authMiddleware),
-    middlewareAdapter(requestValidatorMiddleware, userRegisterRequestValidator),
-    routeAdapter(controller.createUser, { transactional: true, clientProvider: ClientProviders.MONGODB }),
-  ]);
-  router.get('/users', [
-    middlewareAdapter(authMiddleware),
-    middlewareAdapter(requestValidatorMiddleware, getUsersRequestValidator),
-    routeAdapter(controller.listUsers, {
-      cache: {
-        maxAge: 60,
-        type: 'public',
-        revalidate: 'no-revalidate'
-      }
-    }),
-  ]);
-  router.get('/users/:userId', [
-    middlewareAdapter(authMiddleware),
-    middlewareAdapter(requestValidatorMiddleware, getUserByIdRequestValidator),
-    routeAdapter(controller.findUserById),
-  ]);
-  router.put('/users/profile', [
-    middlewareAdapter(authMiddleware),
-    middlewareAdapter(requestValidatorMiddleware, userUpdateRequestValidator),
-    routeAdapter(controller.updateProfile),
-  ]);
+  @Post('/users/sign-up')
+  public signUp(): RouteHandler[] {
+    return [
+      expressMiddlewareAdapter(this.requestValidatorMiddleware, userRegisterRequestValidator),
+      expressRouteAdapter(this.controller.signup),
+    ];
+  }
+
+  @Post('/users')
+  public createUser(): RouteHandler[] {
+    return [
+      expressMiddlewareAdapter(this.authMiddleware),
+      expressMiddlewareAdapter(this.requestValidatorMiddleware, userRegisterRequestValidator),
+      expressRouteAdapter(this.controller.createUser, { transactional: true, clientProvider: ClientProviders.MONGODB }),
+    ];
+  }
+
+  @Get('/users')
+  public listUsers(): RouteHandler[] {
+    return [
+      expressMiddlewareAdapter(this.authMiddleware),
+      expressMiddlewareAdapter(this.requestValidatorMiddleware, getUsersRequestValidator),
+      expressRouteAdapter(this.controller.listUsers, {
+        cache: {
+          maxAge: 60,
+          type: 'public',
+          revalidate: 'no-revalidate'
+        }
+      }),
+    ];
+  }
+
+  @Get('/users/:userId')
+  public findUserById(): RouteHandler[] {
+    return [
+      expressMiddlewareAdapter(this.authMiddleware),
+      expressMiddlewareAdapter(this.requestValidatorMiddleware, getUserByIdRequestValidator),
+      expressRouteAdapter(this.controller.findUserById),
+    ];
+  }
+
+  @Put('/users/profile')
+  public updateProfile(): RouteHandler[] {
+    return [
+      expressMiddlewareAdapter(this.authMiddleware),
+      expressMiddlewareAdapter(this.requestValidatorMiddleware, userUpdateRequestValidator),
+      expressRouteAdapter(this.controller.updateProfile),
+    ];
+  }
 }
+
+export default UsersRoutes;
