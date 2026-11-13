@@ -1,5 +1,13 @@
-export enum TokenExpireTime {
-  DEFAULT_SESSION_EXPIRY_IN_HOURS = 24,
-  DEFAULT_JWT_TOKEN_EXPIRY_IN_DAYS = 1,
-  DEFAULT_REFRESH_TOKEN_EXPIRY_IN_HOURS = 6,
+export enum JwtCryptoTokens {
+  DEFAULT_ALGORITHM = 'HS256',
+  DEFAULT_TOKEN_EXPIRY_TIME = '12h',
+}
+
+export enum AuthMiddlewareErrors {
+  MISSING_AUTH_TOKEN = 'missing auth token',
+  JWT_MALFORMED= 'jwt malformed',
+}
+
+export enum ContentTypeMiddlewareErrors {
+  UNSUPPORTED_MEDIA_TYPE = 'Unsupported Media Type'
 }

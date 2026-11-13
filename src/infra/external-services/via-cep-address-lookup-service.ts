@@ -1,6 +1,6 @@
 import { inject, injectable } from '../../core/dependency-injection';
 import { HttpClientInstanceTokens } from '../../core/dependency-injection/tokens';
-import { AxiosHttpClient } from '../http-clients/axios-http-client';
+import { AxiosHttpClient } from '../http-clients';
 import { AddressLookupService, Address } from '../../data/protocols/external-services';
 import { NotFoundError } from '../../core/errors';
 import { VIA_CEP_BASE_URL } from '../../application/config/env';
@@ -10,7 +10,7 @@ type ViaCepAddress = {
   logradouro: string;
   complemento: string;
   bairro: string;
-  localidade: string; // city
+  localidade: string;
   uf: string;
   estado: string;
   regiao: string;
